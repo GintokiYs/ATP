@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hundsun.atp.persister.mapper.AtpUseCaseInstanceMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.hundsun.atp.persister.model.AtpUseCaseInstance">
+        <id column="id" property="id" />
+        <result column="instance_id" property="instanceId" />
+        <result column="use_case_id" property="useCaseId" />
+        <result column="execute_status" property="executeStatus" />
+        <result column="start_user" property="startUser" />
+        <result column="start_time" property="startTime" />
+        <result column="stop_time" property="stopTime" />
+        <result column="bussiness_time" property="bussinessTime" />
+        <result column="stop_user" property="stopUser" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, instance_id, use_case_id, execute_status, start_user, start_time, stop_time, bussiness_time, stop_user
+    </sql>
+
+</mapper>
