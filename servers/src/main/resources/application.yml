@@ -24,9 +24,23 @@ spring:
       maximum-pool-size: 10
       max-lifetime: 30000   #不能小于30秒，否则默认回到1800秒
       connection-test-query: SELECT 1
+  security:
+    enabled: true
+    csrfEnabled: true
+    username: admin
+    password: Xms+kvR3Q+JnEGP37QSRlkSdiooAuumETfmbvSAISEvty4XVwSFHsFe/o6nNunXEtVjPhgwS7vkuYBSfp/+O+KTw/LqV73dY5/oDMU/3RxrQHagJbTiq++x9qUnQD8XCw/BkmdiDF4T4ceAKsRXiwfWtYzYLtGNbeY2UjfbvZsE=
   mvc:
     pathmatch:
       matching-strategy: ANT_PATH_MATCHER
   jackson:
     serialization:
       write-dates-as-timestamps: true
+server:
+  shutdown: graceful
+  servlet:
+#    context-path: /di
+    session:
+      timeout: 60m
+app:
+  config:
+    config-with-file-mode-enable: false
