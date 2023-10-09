@@ -31,7 +31,7 @@ public class AtpRefTagUseCase implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty("主键id")
-      @TableId(value = "id", type = IdType.AUTO)
+    @TableId(value = "id", type = IdType.AUTO)
     private String id;
 
     @ApiModelProperty("标签id")

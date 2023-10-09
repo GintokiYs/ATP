@@ -22,6 +22,14 @@ import org.springframework.web.bind.annotation.RestController;
  **/
 @RestController
 @RequestMapping("/atp/commonFolder")
-public class AtpFolderController {
+public class AtpCommonFolderController {
+    /**
+     * 创建文件夹
+     * @param folderDto
+     * @return
+     */
+    RpcResuLtDTO<CommonFoLderDto> create(CommonFoLderDto folderDto) {
+
+    }
 
 }

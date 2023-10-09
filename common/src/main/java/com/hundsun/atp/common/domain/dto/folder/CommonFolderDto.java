@@ -1,15 +1,15 @@
-package com.yyh.com.hundsun.atp.sql.entity;
+package com.hundsun.atp.common.domain.dto.folder;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
-import java.io.Serializable;
-import java.time.LocalDateTime;
+
+import com.hundsun.atp.common.domain.dto.AtpBaseDto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -19,17 +19,15 @@ import lombok.experimental.Accessors;
  * @author yeyh
  * @since 2023-09-27
  */
-@Getter
-@Setter
+@SuperBuilder
+@Data
 @Accessors(chain = true)
-@TableName("atp_common_folder")
-@ApiModel(value = "AtpCommonFolder对象", description = "通用文件夹")
-public class AtpCommonFolder implements Serializable {
+@ApiModel(value = "CommonFolder对象", description = "通用文件夹")
+public class CommonFolderDto extends AtpBaseDto {
 
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty("主键id")
-      @TableId(value = "id", type = IdType.AUTO)
     private String id;
 
     @ApiModelProperty("父文件夹id")
@@ -39,7 +37,7 @@ public class AtpCommonFolder implements Serializable {
     private String folderName;
 
     @ApiModelProperty("文件夹类型")
-    private Byte folderType;
+    private Integer folderType;
 
     private String parentUtreeid;
 
@@ -48,9 +46,6 @@ public class AtpCommonFolder implements Serializable {
 
     @ApiModelProperty("是否生效(-1: 已删除, 0: 未生效, 1: 已生效)")
     private Boolean enabled;
-
-    @ApiModelProperty("空间ID")
-    private String projectId;
 
     @ApiModelProperty("执行配置,Map<String,String>")
     private String executeConfig;

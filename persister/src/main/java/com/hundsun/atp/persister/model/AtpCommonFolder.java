@@ -32,7 +32,7 @@ public class AtpCommonFolder implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty("主键id")
-      @TableId(value = "id", type = IdType.AUTO)
+    @TableId(value = "id", type = IdType.AUTO)
     private String id;
 
     @ApiModelProperty("父文件夹id")
@@ -42,7 +42,7 @@ public class AtpCommonFolder implements Serializable {
     private String folderName;
 
     @ApiModelProperty("文件夹类型")
-    private Byte folderType;
+    private Integer folderType;
 
     private String parentUtreeid;
 
