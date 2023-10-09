@@ -80,7 +80,8 @@ public class AtpWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapte
 
                     .accessDeniedHandler(atpAccessDeniedHandler)
                     .and()
-                    .cors().and()
+                    .cors()
+                    .and()
                     .addFilter(atpUsernamePasswordAuthenticationFilter)
                     .csrf().disable();
             http.headers()

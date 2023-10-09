@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.util.Map;
 
 /**
- * 用例
+ * 用例抽象类
  *
  * @ProductName: Hundsun HEP
  * @ProjectName: ATP

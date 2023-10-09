@@ -127,6 +127,7 @@ public class BaseException extends RuntimeException {
         return this.errorProperties;
     }
 
+    @Override
     public String getMessage() {
         StringBuilder sb = new StringBuilder("[" + this.errorCode + "]");
         if (!StrUtil.isEmpty(this.errorMessage)) {

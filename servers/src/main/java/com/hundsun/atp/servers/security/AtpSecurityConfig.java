@@ -4,7 +4,7 @@ package com.hundsun.atp.servers.security;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.hundsun.atp.common.domain.entity.DiUser;
+import com.hundsun.atp.common.domain.entity.AtpUser;
 import com.hundsun.atp.common.util.security.EncryptUtil;
 import com.hundsun.atp.servers.security.repository.impl.MapAtpUserRepository;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,8 +22,8 @@ public class AtpSecurityConfig {
     @Bean
     MapAtpUserRepository userRepository() {
         String encodedPassword = EncryptUtil.rsaDecode(password);
-        DiUser customUser = new DiUser(1L, this.username, encodedPassword);
-        Map<String, DiUser> usernameToCustomUser = new HashMap<>(1);
+        AtpUser customUser = new AtpUser(1L, this.username, encodedPassword);
+        Map<String, AtpUser> usernameToCustomUser = new HashMap<>(1);
         usernameToCustomUser.put(customUser.getUsername(), customUser);
         return new MapAtpUserRepository(usernameToCustomUser);
     }

@@ -9,7 +9,7 @@ import lombok.experimental.SuperBuilder;
 import java.util.Map;
 
 /**
- * 用例
+ * 接口测试用例
  *
  * @ProductName: Hundsun HEP
  * @ProjectName: ATP
