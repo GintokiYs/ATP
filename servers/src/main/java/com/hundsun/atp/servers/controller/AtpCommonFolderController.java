@@ -1,6 +1,14 @@
 package com.hundsun.atp.servers.controller;
 
+import com.hundsun.atp.api.folder.AtpFolderService;
+import com.hundsun.atp.common.domain.dto.folder.AtpCommonFolderDto;
 import com.hundsun.atp.common.domain.dto.usecase.InterfaceUsecaseDto;
+import com.hundsun.atp.common.domain.entity.RpcResultDTO;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,15 +29,21 @@ import org.springframework.web.bind.annotation.RestController;
  * Copyright © 2023 Hundsun Technologies Inc. All Rights Reserved
  **/
 @RestController
-@RequestMapping("/atp/commonFolder")
+@RequestMapping("/commonFolder")
 public class AtpCommonFolderController {
+    @Autowired
+    private AtpFolderService atpFolderService;
+
     /**
      * 创建文件夹
-     * @param folderDto
+     *
+     * @param atpCommonFolderDto
      * @return
      */
-    RpcResuLtDTO<CommonFoLderDto> create(CommonFoLderDto folderDto) {
-
+    @PostMapping("/create")
+    @ApiOperation("新建目录")
+    RpcResultDTO<AtpCommonFolderDto> create(@Validated @RequestBody AtpCommonFolderDto atpCommonFolderDto) {
+        return atpFolderService.create(atpCommonFolderDto);
     }
 
 }

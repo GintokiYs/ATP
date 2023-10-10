@@ -1,15 +1,13 @@
-package com.hundsun.atp.common.domain.dto.folder;
+package com.hundsun.atp.common.domain.vo.folder;
 
 
-import com.hundsun.atp.common.domain.dto.AtpBaseDto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
 
-import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * <p>
@@ -23,7 +21,7 @@ import java.time.LocalDateTime;
 @Data
 @Accessors(chain = true)
 @ApiModel(value = "CommonFolder对象", description = "通用文件夹")
-public class CommonFolderDto extends AtpBaseDto {
+public class AtpCommonFolderVo extends AtpBaseVo {
 
     private static final long serialVersionUID = 1L;
 
@@ -45,7 +43,7 @@ public class CommonFolderDto extends AtpBaseDto {
     private String utreeid;
 
     @ApiModelProperty("是否生效(-1: 已删除, 0: 未生效, 1: 已生效)")
-    private Boolean enabled;
+    private Integer enabled;
 
     @ApiModelProperty("执行配置,Map<String,String>")
     private String executeConfig;
@@ -54,13 +52,13 @@ public class CommonFolderDto extends AtpBaseDto {
     private String createUser;
 
     @ApiModelProperty("创建时间")
-    private LocalDateTime createTime;
+    private Date createTime;
 
     @ApiModelProperty("修改者")
     private String updateUser;
 
     @ApiModelProperty("更新时间")
-    private LocalDateTime updateTime;
+    private Date updateTime;
 
     @ApiModelProperty("备注")
     private String remark;

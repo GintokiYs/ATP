@@ -2,7 +2,7 @@ package com.hundsun.atp.common.domain.entity;
 
 
 import cn.hutool.core.util.StrUtil;
-import com.hundsun.atp.common.constant.ExceptionLogTypeEnum;
+import com.hundsun.atp.common.enums.ExceptionLogTypeEnum;
 import com.hundsun.atp.common.enums.Level;
 import com.hundsun.atp.common.util.ErrorFormatter;
 

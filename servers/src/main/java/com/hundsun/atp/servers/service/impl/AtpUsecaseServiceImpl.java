@@ -22,7 +22,7 @@ public class AtpUsecaseServiceImpl implements AtpUsecaseService {
                 .caseType(usecase.getCaseType())
                 .folderId(usecase.getFolderId())
                 .checkRule(usecase.getCheckRule())
-                .enabled(true)
+                .enabled(1)
                 .build();
         return atpUseCaseBusiness.save(atpUseCase);
     }

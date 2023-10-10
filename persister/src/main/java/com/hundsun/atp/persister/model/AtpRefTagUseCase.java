@@ -5,9 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
 
@@ -26,6 +24,8 @@ import java.io.Serializable;
 @Accessors(chain = true)
 @TableName("atp_ref_tag_use_case")
 @ApiModel(value = "AtpRefTagUseCase对象", description = "用例与标签之间的关联关系")
+@AllArgsConstructor
+@NoArgsConstructor
 public class AtpRefTagUseCase implements Serializable {
 
     private static final long serialVersionUID = 1L;

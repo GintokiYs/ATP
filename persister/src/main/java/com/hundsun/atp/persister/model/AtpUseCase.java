@@ -5,9 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
 
@@ -27,6 +25,8 @@ import java.time.LocalDateTime;
 @Accessors(chain = true)
 @TableName("atp_use_case")
 @ApiModel(value = "AtpUseCase对象", description = "用例详情")
+@AllArgsConstructor
+@NoArgsConstructor
 public class AtpUseCase implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -54,7 +54,7 @@ public class AtpUseCase implements Serializable {
     private String executeConfig;
 
     @ApiModelProperty("是否生效(-1: 已删除, 0: 未生效, 1: 已生效)")
-    private Boolean enabled;
+    private Integer enabled;
 
     @ApiModelProperty("创建用户")
     private String createUser;

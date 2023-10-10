@@ -5,9 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
 
@@ -26,6 +24,8 @@ import java.io.Serializable;
 @Accessors(chain = true)
 @TableName("atp_tag_info")
 @ApiModel(value = "AtpTagInfo对象", description = "标签明细")
+@AllArgsConstructor
+@NoArgsConstructor
 public class AtpTagInfo implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -44,7 +44,7 @@ public class AtpTagInfo implements Serializable {
     private String tagValue;
 
     @ApiModelProperty("是否可用")
-    private Boolean enabled;
+    private Integer enabled;
 
     @ApiModelProperty("空间id")
     private String projectId;

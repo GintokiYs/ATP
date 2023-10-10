@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
  * Copyright © 2023 Hundsun Technologies Inc. All Rights Reserved
  **/
 @RestController
-@RequestMapping("/atp/usecase")
+@RequestMapping("/usecase")
 @Api(tags = "用例")
 @Validated
 public class AtpUsecaseController {

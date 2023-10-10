@@ -1,8 +1,10 @@
-package com.hundsun.atp.common.domain.dto;
+package com.hundsun.atp.common.domain.vo.folder;
 
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.io.Serializable;
@@ -26,10 +28,9 @@ import java.io.Serializable;
 @SuperBuilder
 @ToString(callSuper =true)
 @Data
-@ApiModel(value = "基础DTO对象", description = "基础DTO对象")
 @AllArgsConstructor
 @NoArgsConstructor
-public abstract class AtpBaseDto implements Serializable {
+public abstract class AtpBaseVo implements Serializable {
     private static final long serialVersionUID = -1L;
 
     /**
