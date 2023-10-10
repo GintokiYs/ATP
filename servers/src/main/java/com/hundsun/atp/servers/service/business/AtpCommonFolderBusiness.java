@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * <p>
@@ -80,7 +81,7 @@ public class AtpCommonFolderBusiness extends ServiceImpl<AtpCommonFolderMapper, 
     public AtpCommonFolderVo insert(AtpCommonFolderDto folderDto) {
         folderDto.setCreateUser(folderDto.getOperatorCode());
         AtpCommonFolder atpCommonFolder = commonFolderConvert.toModel(folderDto);
-        AtpCommonFolderVo atpCommonFolderVo = commonFolderConvert.toVo(folderDto);
+        AtpCommonFolderVo atpCommonFolderVo = commonFolderConvert.toVo(atpCommonFolder);
         String parentId = folderDto.getParentId();
         String folderName = folderDto.getFolderName();
 
@@ -127,5 +128,18 @@ public class AtpCommonFolderBusiness extends ServiceImpl<AtpCommonFolderMapper, 
         Long commonFolderCount = atpCommonFolderMapper.selectCount(commonFolderQueryWrapper);
         Precondition.checkIndexGreaterZero(Convert.toInt(commonFolderCount), "10000003", folderName);
         return true;
+    }
+
+    public List<AtpCommonFolderVo> selectFlatFolders(String projectId) {
+        // 获取当前空间下所有的Folder
+        QueryWrapper<AtpCommonFolder> queryWrapper = new QueryWrapper<>();
+        HashMap<String, Object> queryMap = MapUtil.newHashMap();
+
+        queryMap.put("project_id", projectId);
+        queryMap.put("enabled", EnableEnum.VALID.getCode());
+        QueryWrapper<AtpCommonFolder> commonFolderQueryWrapper = queryWrapper.allEq(queryMap).or().isNull("project_id");
+        List<AtpCommonFolder> atpCommonFolders = atpCommonFolderMapper.selectList(commonFolderQueryWrapper);
+
+        return commonFolderConvert.toVoList(atpCommonFolders);
     }
 }

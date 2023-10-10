@@ -1,5 +1,5 @@
 package com.hundsun.atp.common.enums;
 
 public enum Level {
-  WARN, ERROR;
+    TRACE, DEBUG, INFO, WARN, ERROR, FATA;
 }
