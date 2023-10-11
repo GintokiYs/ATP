@@ -40,7 +40,7 @@ public abstract class AbstractUsecaseDto implements Serializable {
 
     private String checkRule;
 
-    private String caseType;
+    private Integer caseType;
 
     private Map<String, String> executeConfig;
 

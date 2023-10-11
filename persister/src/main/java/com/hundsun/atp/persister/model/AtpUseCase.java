@@ -54,7 +54,7 @@ public class AtpUseCase implements Serializable {
 
     @ApiModelProperty("用例类型")
     @TableField(value = "case_type")
-    private String caseType;
+    private Integer caseType;
 
     @ApiModelProperty("执行配置,Map<String,String>")
     @TableField(value = "execute_config")
