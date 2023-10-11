@@ -3,6 +3,7 @@ package com.hundsun.atp.common.domain.dto.usecase;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -24,6 +25,7 @@ import java.util.Map;
  * Copyright © 2023 Hundsun Technologies Inc. All Rights Reserved
  **/
 @Data
+@SuperBuilder
 @NoArgsConstructor
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "caseType", visible = true)
 @JsonSubTypes({

@@ -1,8 +1,7 @@
 package com.hundsun.atp.servers.controller;
 
-import com.hundsun.atp.api.usecase.AtpUsecaseService;
+import com.hundsun.atp.api.AtpUsecaseService;
 import com.hundsun.atp.common.domain.dto.usecase.AbstractUsecaseDto;
-import com.hundsun.atp.common.domain.dto.usecase.InterfaceUsecaseDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,7 +1,8 @@
 package com.hundsun.atp.servers.service.impl;
 
 import cn.hutool.core.lang.UUID;
-import com.hundsun.atp.api.usecase.AtpUsecaseService;
+import cn.hutool.core.util.IdUtil;
+import com.hundsun.atp.api.AtpUsecaseService;
 import com.hundsun.atp.common.domain.dto.usecase.AbstractUsecaseDto;
 import com.hundsun.atp.persister.model.AtpUseCase;
 import com.hundsun.atp.servers.service.business.AtpUseCaseBusiness;
@@ -16,9 +17,12 @@ public class AtpUsecaseServiceImpl implements AtpUsecaseService {
     // 用例新建（编辑、删除、查询）
     @Override
     public Boolean createUsecase(AbstractUsecaseDto usecase) {
-        //
-        AtpUseCase atpUseCase = AtpUseCase.builder().id(UUID.randomUUID().toString())
-                .caseId(UUID.randomUUID().toString())
+        // 校验
+
+
+        AtpUseCase atpUseCase = AtpUseCase.builder()
+                .id(IdUtil.simpleUUID())
+                .caseId(IdUtil.simpleUUID())
                 .caseType(usecase.getCaseType())
                 .folderId(usecase.getFolderId())
                 .checkRule(usecase.getCheckRule())

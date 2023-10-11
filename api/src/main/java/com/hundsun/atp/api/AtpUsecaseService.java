@@ -1,4 +1,4 @@
-package com.hundsun.atp.api.usecase;
+package com.hundsun.atp.api;
 
 import com.hundsun.atp.common.domain.dto.usecase.AbstractUsecaseDto;
 import com.hundsun.atp.common.domain.dto.usecase.InterfaceUsecaseDto;

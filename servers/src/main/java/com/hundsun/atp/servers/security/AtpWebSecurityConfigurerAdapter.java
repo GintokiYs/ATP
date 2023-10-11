@@ -55,7 +55,7 @@ public class AtpWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapte
                 "/swagger-ui.html",
                 "/v3/api-docs",
                 "/swagger-resources/**",
-                "/**/**",
+//                "/**/**",
                 "/v2/api-docs"});
     }
 
@@ -81,8 +81,8 @@ public class AtpWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapte
 
                     .accessDeniedHandler(atpAccessDeniedHandler)
                     .and()
-                    .cors()
-                    .and()
+//                    .cors()
+//                    .and()
                     .addFilter(atpUsernamePasswordAuthenticationFilter)
                     .csrf().disable();
             http.headers()

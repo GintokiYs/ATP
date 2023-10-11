@@ -25,7 +25,32 @@ import java.util.Map;
  * Copyright © 2023 Hundsun Technologies Inc. All Rights Reserved
  **/
 @Data
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
 @JsonTypeName(value = "1")
 public class InterfaceUsecaseDto extends AbstractUsecaseDto {
-    private String InterfaceContent;
+    /**
+     * 普通接口用例描述详情
+     */
+    private String interfaceContent;
+
+    /**
+     * GPT生成的用例的前缀名称
+     */
+    private String gptCaseNamePrefix;
+
+    /**
+     * GPT生成的用例时的描述信息
+     */
+    private String gptInterfaceDes;
+
+    /**
+     * GPT生成的用例时的补充说明
+     */
+    private String gptInterfaceComplement;
+    /**
+     * 期望GPT生成的用例个数
+     */
+    private Integer gptCaseNum;
 }
