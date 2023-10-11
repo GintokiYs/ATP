@@ -1,6 +1,7 @@
 package com.hundsun.atp.persister.model;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
@@ -31,15 +32,18 @@ public class AtpRefTagUseCase implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty("主键id")
-    @TableId(value = "id", type = IdType.AUTO)
+    @TableId(value = "id", type = IdType.INPUT)
     private String id;
 
     @ApiModelProperty("标签id")
+    @TableField(value = "tag_id")
     private String tagId;
 
     @ApiModelProperty("用例id")
+    @TableField(value = "case_id")
     private String caseId;
 
     @ApiModelProperty("空间id")
+    @TableField(value = "project_id")
     private String projectId;
 }
