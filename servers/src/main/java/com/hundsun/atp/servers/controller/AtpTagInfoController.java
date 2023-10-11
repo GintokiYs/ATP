@@ -7,16 +7,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <p>
- * 测试用例实例 前端控制器
+ * 标签明细 前端控制器
  * </p>
  *
  * @author yeyh
  * @since 2023-09-27
  */
-@Api(tags = "用例实例管理")
+@Api(tags = "标签管理")
 @RestController
-@RequestMapping("/useCaseInstance")
+@RequestMapping("/tagInfo")
 @Validated
-public class AtpUseCaseInstanceController {
+public class AtpTagInfoController {
 
 }
