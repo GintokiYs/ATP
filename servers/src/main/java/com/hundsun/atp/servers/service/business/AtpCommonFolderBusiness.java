@@ -142,4 +142,11 @@ public class AtpCommonFolderBusiness extends ServiceImpl<AtpCommonFolderMapper, 
 
         return commonFolderConvert.toVoList(atpCommonFolders);
     }
+
+    public Boolean update(AtpCommonFolderDto atpCommonFolderDto) {
+        // 校验要更新目录的名称是否合规（重名---可以调用validateFolderName方法）
+
+        // 更新的话推荐走 智能替换而不是全覆盖
+        return null;
+    }
 }

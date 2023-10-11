@@ -29,7 +29,7 @@ import java.util.List;
  * <p>
  * Copyright © 2023 Hundsun Technologies Inc. All Rights Reserved
  **/
-@Api(tags = "文件夹管理")
+@Api(tags = "目录管理")
 @RestController
 @RequestMapping("/commonFolder")
 @Validated
@@ -59,5 +59,42 @@ public class AtpCommonFolderController {
     @ApiOperation("目录树展示")
     RpcResultDTO<List<AtpCommonFolderVo>> selectFlatFolders(@RequestParam String projectId) {
         return atpFolderService.selectFlatFolders(projectId);
+    }
+
+    /**
+     * 编辑目录(适用于目录整体信息的编辑以及目录属性：执行配置的编辑更新)
+     *
+     * @param atpCommonFolderDto
+     * @return
+     */
+    @PostMapping("/update")
+    @ApiOperation("编辑目录")
+    RpcResultDTO<Boolean> update(@Validated @RequestBody AtpCommonFolderDto atpCommonFolderDto) {
+        return atpFolderService.update(atpCommonFolderDto);
+    }
+
+    /**
+     * 删除目录(假删)
+     *
+     * @param id
+     * @param operatorCode
+     * @return
+     */
+    @PostMapping("/delete")
+    @ApiOperation("编辑目录")
+    RpcResultDTO<Boolean> delete(@RequestParam String id, @RequestParam String operatorCode) {
+        return atpFolderService.delete(id, operatorCode);
+    }
+
+    /**
+     * 目录详情展示
+     *
+     * @param id
+     * @return
+     */
+    @PostMapping("/select")
+    @ApiOperation("目录详情展示")
+    RpcResultDTO<List<AtpCommonFolderVo>> select(@RequestParam String id) {
+        return atpFolderService.select(id);
     }
 }

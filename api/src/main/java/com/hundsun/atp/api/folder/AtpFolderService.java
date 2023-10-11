@@ -28,4 +28,9 @@ public interface AtpFolderService {
 
     RpcResultDTO<List<AtpCommonFolderVo>> selectFlatFolders(String projectId);
 
+    RpcResultDTO<Boolean> update(AtpCommonFolderDto atpCommonFolderDto);
+
+    RpcResultDTO<Boolean> delete(String id, String operatorCode);
+
+    RpcResultDTO<List<AtpCommonFolderVo>> select(String id);
 }
