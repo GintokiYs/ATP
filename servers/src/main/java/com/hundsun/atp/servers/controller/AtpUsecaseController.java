@@ -2,6 +2,8 @@ package com.hundsun.atp.servers.controller;
 
 import com.hundsun.atp.api.AtpUsecaseService;
 import com.hundsun.atp.common.domain.dto.usecase.AbstractUsecaseDto;
+import com.hundsun.atp.common.domain.dto.usecase.QueryUsecaseDto;
+import com.hundsun.atp.common.domain.entity.RpcResultDTO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,8 +40,13 @@ public class AtpUsecaseController {
 
     @PostMapping("/create")
     @ApiOperation("新建测试用例")
-    public Boolean createUsecase(@Validated @RequestBody AbstractUsecaseDto usecaseDto) {
+    public RpcResultDTO<Boolean> createUseCase(@Validated @RequestBody AbstractUsecaseDto usecaseDto) {
+        return atpUsecaseService.createUseCase(usecaseDto);
+    }
 
-        return atpUsecaseService.createUsecase(usecaseDto);
+    @PostMapping("/select")
+    @ApiOperation("查询测试用例详情")
+    public RpcResultDTO<Boolean> selectUseCaseInfo(@Validated @RequestBody QueryUsecaseDto queryUsecaseDto) {
+        return atpUsecaseService.selectUseCaseInfo(queryUsecaseDto);
     }
 }

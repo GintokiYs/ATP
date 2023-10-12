@@ -55,7 +55,7 @@ public class AtpWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapte
                 "/swagger-ui.html",
                 "/v3/api-docs",
                 "/swagger-resources/**",
-//                "/**/**",
+                "/**/**",
                 "/v2/api-docs"});
     }
 

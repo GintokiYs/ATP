@@ -16,4 +16,5 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface AtpUseCaseMapper extends BaseMapper<AtpUseCase> {
 
+    void selectUseCaseInfo(String foldId, String name, String checkResult);
 }

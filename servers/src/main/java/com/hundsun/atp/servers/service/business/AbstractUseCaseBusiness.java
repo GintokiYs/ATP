@@ -5,6 +5,8 @@ import com.hundsun.atp.common.domain.dto.usecase.AbstractUsecaseDto;
 import com.hundsun.atp.common.enums.UseCaseTypeEnum;
 import com.hundsun.atp.persister.mapper.AtpUseCaseMapper;
 import com.hundsun.atp.persister.model.AtpUseCase;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -24,6 +26,8 @@ import java.util.List;
  * <p>
  * Copyright © 2023 Hundsun Technologies Inc. All Rights Reserved
  **/
+@Slf4j
+@Service
 public abstract class AbstractUseCaseBusiness extends ServiceImpl<AtpUseCaseMapper, AtpUseCase> {
 
     public abstract UseCaseTypeEnum getUseCaseTypeEnum();
