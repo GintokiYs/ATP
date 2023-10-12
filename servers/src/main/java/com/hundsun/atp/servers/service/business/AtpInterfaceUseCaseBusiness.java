@@ -39,6 +39,7 @@ public class AtpInterfaceUseCaseBusiness extends AbstractUseCaseBusiness {
                     .id(IdUtil.simpleUUID())
                     .caseId(IdUtil.simpleUUID())
                     .caseType(usecase.getCaseType())
+                    .name(usecase.getName())
                     .folderId(usecase.getFolderId())
                     .interfaceContent(((InterfaceUsecaseDto) usecase).getInterfaceContent())
                     .checkRule(usecase.getCheckRule())
