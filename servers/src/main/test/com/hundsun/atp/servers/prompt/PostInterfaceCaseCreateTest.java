@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.hundsun.atp.common.prompt.LLMEnum;
-import com.hundsun.atp.servers.prompt.tcase.PostInterfaceCaseCreate;
+import com.hundsun.atp.servers.prompt.casecreate.PostInterfaceCaseCreate;
 import org.junit.Test;
 
 public class PostInterfaceCaseCreateTest {
