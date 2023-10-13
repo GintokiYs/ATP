@@ -1,11 +1,13 @@
 package com.hundsun.atp.common.domain.dto.usecase;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -30,6 +32,8 @@ import java.util.Map;
 @AllArgsConstructor
 @JsonTypeName(value = "1")
 public class InterfaceUsecaseDto extends AbstractUsecaseDto {
+
+    private String InterfaceContent;
     /**
      * 普通接口用例描述详情
      */

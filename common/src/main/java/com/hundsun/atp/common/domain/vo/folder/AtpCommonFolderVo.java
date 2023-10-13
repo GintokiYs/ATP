@@ -1,6 +1,7 @@
 package com.hundsun.atp.common.domain.vo.folder;
 
 
+import com.hundsun.atp.common.domain.vo.AtpBaseVo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

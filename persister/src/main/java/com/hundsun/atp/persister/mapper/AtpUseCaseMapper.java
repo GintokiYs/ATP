@@ -5,6 +5,9 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.hundsun.atp.persister.model.AtpUseCase;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * <p>
  * 用例详情 Mapper 接口
@@ -16,5 +19,6 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface AtpUseCaseMapper extends BaseMapper<AtpUseCase> {
 
+    List<AtpUseCase> selectByCaseIds(ArrayList<String> caseIds);
     void selectUseCaseInfo(String foldId, String name, String checkResult);
 }

@@ -1,4 +1,4 @@
-package com.hundsun.atp.common.domain.vo.folder;
+package com.hundsun.atp.common.domain.vo;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;

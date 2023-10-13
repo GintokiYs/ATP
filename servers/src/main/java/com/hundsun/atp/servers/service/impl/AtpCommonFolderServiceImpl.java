@@ -73,4 +73,6 @@ public class AtpCommonFolderServiceImpl implements AtpFolderService {
     public RpcResultDTO<List<AtpCommonFolderVo>> select(String id) {
         return null;
     }
+
+
 }

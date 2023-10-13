@@ -24,9 +24,22 @@
     <sql id="Base_Column_List">
         id, case_id, name, folder_id, check_rule, case_type, execute_config, enabled, create_user, create_time, update_user, update_time, interface_content, remark
     </sql>
+    <select id="selectByCaseIds" resultType="com.hundsun.atp.persister.model.AtpUseCase">
+        SELECT * FROM atp_use_case
+        <if test="caseIds != null and caseIds.size() > 0">
+            WHERE case_id IN
+            <foreach collection="caseIds" item="caseId" open="(" separator="," close=")">
+                #{caseId}
+            </foreach>
+        </if>
+        <if test="caseIds == null or caseIds.size() == 0">
+            WHERE 1=0 <!-- 返回空结果集 -->
+        </if>
+    </select>
 
     <select id="selectUseCaseInfo">
 
 
     </select>
+
 </mapper>

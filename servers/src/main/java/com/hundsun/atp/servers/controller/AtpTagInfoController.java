@@ -1,9 +1,19 @@
 package com.hundsun.atp.servers.controller;
 
+import com.hundsun.atp.api.taginfo.AtpTagInfoService;
+import com.hundsun.atp.api.usecase.AtpUsecaseService;
+import com.hundsun.atp.common.domain.dto.tag.AtpTagInfoDto;
+import com.hundsun.atp.common.domain.dto.usecase.AbstractUsecaseDto;
+import com.hundsun.atp.common.domain.entity.RpcResultDTO;
+import com.hundsun.atp.common.domain.vo.folder.AtpCommonFolderVo;
+import com.hundsun.atp.common.domain.vo.taginfo.AtpTagInfoVo;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * <p>
@@ -18,5 +28,36 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/tagInfo")
 @Validated
 public class AtpTagInfoController {
+
+    @Autowired
+    private AtpTagInfoService atpTagInfoService;
+
+    @PostMapping("/create")
+    @ApiOperation("新建标签")
+    public RpcResultDTO<Boolean> createTagInfo(@Validated @RequestBody AtpTagInfoDto tagInfoDto) {
+
+        return atpTagInfoService.createTagInfo(tagInfoDto);
+    }
+
+    @PostMapping("/delete")
+    @ApiOperation("删除标签")
+    public RpcResultDTO<Boolean> deleteTagInfo(@Validated @RequestBody AtpTagInfoDto tagInfoDto) {
+
+        return atpTagInfoService.deleteTagInfo(tagInfoDto);
+    }
+
+    @PostMapping("/edit")
+    @ApiOperation("编辑标签信息")
+    public RpcResultDTO<Boolean> editTagInfo(@Validated @RequestBody AtpTagInfoDto tagInfoDto) {
+
+        return atpTagInfoService.editTagInfo(tagInfoDto);
+    }
+
+    @PostMapping("/query")
+    @ApiOperation("查询标签")
+    public RpcResultDTO<List<AtpTagInfoVo>> queryTagInfo() {
+
+        return atpTagInfoService.queryTagInfo();
+    }
 
 }
