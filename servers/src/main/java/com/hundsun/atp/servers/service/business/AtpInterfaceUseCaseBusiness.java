@@ -1,6 +1,7 @@
 package com.hundsun.atp.servers.service.business;
 
 import cn.hutool.core.util.IdUtil;
+import com.hundsun.atp.servers.prompt.casecreate.PostInterfaceCaseCreate;
 import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,7 +14,6 @@ import com.hundsun.atp.common.enums.UseCaseTypeEnum;
 import com.hundsun.atp.common.prompt.LLMEnum;
 import com.hundsun.atp.persister.model.AtpUseCase;
 import com.hundsun.atp.servers.prompt.LLMApiUtils;
-import com.hundsun.atp.servers.prompt.tcase.PostInterfaceCaseCreate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

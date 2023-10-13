@@ -4,9 +4,7 @@ package com.hundsun.atp.common.domain.dto.folder;
 import com.hundsun.atp.common.domain.dto.AtpBaseDto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
 
@@ -27,6 +25,8 @@ import java.util.Map;
 @ApiModel(value = "AtpCommonFolder对象", description = "通用文件夹")
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 public class AtpCommonFolderDto extends AtpBaseDto {
 
     private static final long serialVersionUID = 1L;

@@ -40,6 +40,11 @@ public class AtpCommonFolderServiceImpl implements AtpFolderService {
         return RpcResultUtils.suc(atpCommonFolderBusiness.selectFlatFolders(projectId));
     }
 
+
+    public RpcResultDTO<AtpCommonFolderVo> selectById(String Id){
+        return RpcResultUtils.suc(atpCommonFolderBusiness.select(Id));
+    }
+
     /**
      * 编辑目录(适用于目录整体信息的编辑以及目录属性：执行配置的编辑更新)
      *
@@ -60,6 +65,11 @@ public class AtpCommonFolderServiceImpl implements AtpFolderService {
      */
     @Override
     public RpcResultDTO<Boolean> delete(String id, String operatorCode) {
+        return RpcResultUtils.suc(atpCommonFolderBusiness.update(atpCommonFolderBusiness.delete(id,operatorCode)));
+    }
+
+    @Override
+    public RpcResultDTO<List<AtpCommonFolderVo>> select(String id) {
         return null;
     }
 
@@ -69,8 +79,5 @@ public class AtpCommonFolderServiceImpl implements AtpFolderService {
      * @param id
      * @return
      */
-    @Override
-    public RpcResultDTO<List<AtpCommonFolderVo>> select(String id) {
-        return null;
-    }
+
 }

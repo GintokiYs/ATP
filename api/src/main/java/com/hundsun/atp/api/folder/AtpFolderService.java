@@ -33,4 +33,8 @@ public interface AtpFolderService {
     RpcResultDTO<Boolean> delete(String id, String operatorCode);
 
     RpcResultDTO<List<AtpCommonFolderVo>> select(String id);
+
+    RpcResultDTO<AtpCommonFolderVo> selectById(String id);
+
+
 }

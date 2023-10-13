@@ -71,6 +71,7 @@ public class AtpCommonFolderController {
     @PostMapping("/update")
     @ApiOperation("编辑目录")
     RpcResultDTO<Boolean> update(@Validated @RequestBody AtpCommonFolderDto atpCommonFolderDto) {
+        String id = atpCommonFolderDto.getId();
         return atpFolderService.update(atpCommonFolderDto);
     }
 
@@ -82,7 +83,7 @@ public class AtpCommonFolderController {
      * @return
      */
     @PostMapping("/delete")
-    @ApiOperation("编辑目录")
+    @ApiOperation("删除目录")
     RpcResultDTO<Boolean> delete(@RequestParam String id, @RequestParam String operatorCode) {
         return atpFolderService.delete(id, operatorCode);
     }
@@ -95,7 +96,7 @@ public class AtpCommonFolderController {
      */
     @PostMapping("/select")
     @ApiOperation("目录详情展示")
-    RpcResultDTO<List<AtpCommonFolderVo>> select(@RequestParam String id) {
-        return atpFolderService.select(id);
+    RpcResultDTO<AtpCommonFolderVo> select(@RequestParam String id) {
+        return atpFolderService.selectById(id);
     }
 }
