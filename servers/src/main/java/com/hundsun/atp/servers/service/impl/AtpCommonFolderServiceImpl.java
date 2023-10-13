@@ -40,9 +40,14 @@ public class AtpCommonFolderServiceImpl implements AtpFolderService {
         return RpcResultUtils.suc(atpCommonFolderBusiness.selectFlatFolders(projectId));
     }
 
-
-    public RpcResultDTO<AtpCommonFolderVo> selectById(String Id){
-        return RpcResultUtils.suc(atpCommonFolderBusiness.select(Id));
+    /**
+     * 目录详情展示
+     *
+     * @param id
+     * @return
+     */
+    public RpcResultDTO<AtpCommonFolderVo> selectById(String id){
+        return RpcResultUtils.suc(atpCommonFolderBusiness.select(id));
     }
 
     /**
@@ -68,16 +73,6 @@ public class AtpCommonFolderServiceImpl implements AtpFolderService {
         return RpcResultUtils.suc(atpCommonFolderBusiness.update(atpCommonFolderBusiness.delete(id,operatorCode)));
     }
 
-    @Override
-    public RpcResultDTO<List<AtpCommonFolderVo>> select(String id) {
-        return null;
-    }
 
-    /**
-     * 目录详情展示
-     *
-     * @param id
-     * @return
-     */
 
 }
