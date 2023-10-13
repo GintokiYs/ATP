@@ -46,7 +46,7 @@
         id, case_id, name, folder_id, check_rule, case_type, execute_config, enabled, create_user, create_time, update_user, update_time, interface_content, remark
     </sql>
 
-    <select id="selectUseCaseInfo" resultMap="AtpUseCaseWithInstanceMap">
+    <select id="selectUseCaseWithInstanceInfo" resultMap="AtpUseCaseWithInstanceMap">
         select
         a.id,
         a.case_id,
@@ -78,6 +78,33 @@
         <if test="checkResult != null and checkResult != ''">
             and b.execute_status = #{checkResult}
         </if>
-        order by a.case_id , b.bussiness_time desc;
+        order by a.case_id , b.bussiness_time desc
+    </select>
+
+    <select id="selectUseCaseInfo" resultMap="BaseResultMap">
+        select
+        a.id,
+        a.case_id,
+        a.name,
+        a.folder_id,
+        a.check_rule,
+        a.case_type,
+        a.execute_config,
+        a.enabled,
+        a.create_user,
+        a.create_time,
+        a.update_user,
+        a.update_time,
+        a.interface_content,
+        a.remark
+        from atp_use_case as a
+        where a.enabled = 1
+        <if test="folderId != null and folderId != ''">
+            and a.folder_id = #{folderId}
+        </if>
+        <if test="name != null and name != ''">
+            and UPPER(a.name) like concat('%',UPPER(#{name}),'%')
+        </if>
+        order by a.update_time desc
     </select>
 </mapper>

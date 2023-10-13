@@ -1,6 +1,9 @@
 package com.hundsun.atp.servers.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.hundsun.atp.api.AtpUsecaseService;
 import com.hundsun.atp.common.domain.dto.usecase.AbstractUsecaseDto;
 import com.hundsun.atp.common.domain.dto.usecase.QueryUsecaseDto;
@@ -13,7 +16,9 @@ import com.hundsun.atp.common.util.RpcResultUtils;
 import com.hundsun.atp.persister.mapper.AtpUseCaseMapper;
 import com.hundsun.atp.persister.model.AtpUseCase;
 
+import com.hundsun.atp.persister.model.AtpUseCaseInstance;
 import com.hundsun.atp.servers.service.business.AbstractUseCaseBusiness;
+import com.hundsun.atp.servers.service.business.AtpUseCaseInstanceBusiness;
 import com.hundsun.atp.servers.service.business.factory.UseCaseBusinessFactory;
 import com.hundsun.atp.servers.service.convert.UseCaseConvert;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +27,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,6 +40,9 @@ public class AtpUsecaseServiceImpl implements AtpUsecaseService {
 
     @Autowired
     private AtpUseCaseMapper atpUseCaseMapper;
+
+    @Autowired
+    private AtpUseCaseInstanceBusiness atpUseCaseInstanceBusiness;
 
     @Override
     public RpcResultDTO<Boolean> createUseCase(AbstractUsecaseDto usecase) {
@@ -49,30 +58,48 @@ public class AtpUsecaseServiceImpl implements AtpUsecaseService {
     }
 
     @Override
-    public RpcResultDTO<List<AtpUseCaseStatistics>> selectUseCaseInfo(QueryUsecaseDto queryUsecaseDto) {
+    public RpcResultDTO<PageInfo<AtpUseCaseStatistics>> selectUseCaseInfo(QueryUsecaseDto queryUsecaseDto) {
         List<AtpUseCaseStatistics> result = new ArrayList<>();
         // 根据目录id,用例名称和 实例执行结果 查询所有用例
-        List<AtpUseCaseWithInstance> atpUseCaseWithInstances =
-                atpUseCaseMapper.selectUseCaseInfo(queryUsecaseDto.getFoldId(), queryUsecaseDto.getName(), queryUsecaseDto.getCheckResult());
-        Map<String, List<AtpUseCaseWithInstance>> collect = atpUseCaseWithInstances.stream().collect(Collectors.groupingBy(AtpUseCaseWithInstance::getCaseId));
-        for (Map.Entry<String, List<AtpUseCaseWithInstance>> entry : collect.entrySet()) {
-            List<AtpUseCaseWithInstance> entryValue = entry.getValue();
-            if (CollUtil.isNotEmpty(entryValue)) {
-                // 拿到最新business的用例实例结果
-                AtpUseCaseWithInstance atpUseCaseWithInstance = entryValue.get(0);
-                int totalInstanceCount = entryValue.size();
+        PageHelper.startPage(queryUsecaseDto.getPageNum(), queryUsecaseDto.getPageSize());
+        List<AtpUseCase> atpUseCases =
+                atpUseCaseMapper.selectUseCaseInfo(queryUsecaseDto.getFoldId(), queryUsecaseDto.getName());
+        PageInfo<AtpUseCase> atpUseCasePageInfo = new PageInfo<>(atpUseCases);
+        List<AtpUseCase> list = atpUseCasePageInfo.getList();
+        if (CollUtil.isEmpty(list)) {
+            PageInfo<AtpUseCaseStatistics> atpUseCaseStatisticsPageInfo = new PageInfo<>(result);
+            return RpcResultUtils.suc((atpUseCaseStatisticsPageInfo));
+        }
+        List<String> caseIdList = list.stream().map(AtpUseCase::getCaseId).collect(Collectors.toList());
+        QueryWrapper<AtpUseCaseInstance> queryWrapper = new QueryWrapper<>();
+        queryWrapper.in("use_case_id", caseIdList).eq("execute_status", queryUsecaseDto.getCheckResult()).orderByDesc("bussiness_time");
+        List<AtpUseCaseInstance> atpUseCaseInstances = atpUseCaseInstanceBusiness.list(queryWrapper);
+        Map<String, List<AtpUseCaseInstance>> withInstanceMap = atpUseCaseInstances.stream()
+                .collect(Collectors.groupingBy(AtpUseCaseInstance::getUseCaseId));
+
+        for (AtpUseCase atpUseCase : list) {
+            String caseId = atpUseCase.getCaseId();
+            List<AtpUseCaseInstance> atpUseCaseWithInstances1 = withInstanceMap.get(caseId);
+            if (CollUtil.isNotEmpty(atpUseCaseWithInstances1)) {
+                int totalInstanceCount = atpUseCaseWithInstances1.size();
                 int sucInstanceCount = 0;
                 int failInstanceCount = 0;
                 // 统计实例个数、成功个数、失败个数，计算成功率、失败率
-                for (AtpUseCaseWithInstance atpUseCaseWithInstanceItem : entryValue) {
-                    if (ExecuteStatusEnum.SUCCESS.getCode().equalsIgnoreCase(atpUseCaseWithInstanceItem.getExecuteStatus())) {
+                for (AtpUseCaseInstance atpUseCaseInstance : atpUseCaseWithInstances1) {
+                    if (ExecuteStatusEnum.SUCCESS.getCode().equalsIgnoreCase(atpUseCaseInstance.getExecuteStatus())) {
                         sucInstanceCount++;
                     }
-                    if (ExecuteStatusEnum.FAIL.getCode().equalsIgnoreCase(atpUseCaseWithInstanceItem.getExecuteStatus())) {
+                    if (ExecuteStatusEnum.FAIL.getCode().equalsIgnoreCase(atpUseCaseInstance.getExecuteStatus())) {
                         failInstanceCount++;
                     }
                 }
-                AtpUseCaseStatistics atpUseCaseStatistics = UseCaseConvert.INSTANCE.enhanceStatistics(atpUseCaseWithInstance);
+                // 填入最新business的用例实例结果
+                AtpUseCaseStatistics atpUseCaseStatistics = UseCaseConvert.INSTANCE.enhanceStatistics(atpUseCase);
+                AtpUseCaseInstance lastedAtpUseCaseInstance = atpUseCaseWithInstances1.get(0);
+                atpUseCaseStatistics.setInstanceId(lastedAtpUseCaseInstance.getInstanceId());
+                atpUseCaseStatistics.setBussinessTime(lastedAtpUseCaseInstance.getBussinessTime());
+                atpUseCaseStatistics.setExecuteStatus(lastedAtpUseCaseInstance.getExecuteStatus());
+
                 atpUseCaseStatistics.setTotalCount(totalInstanceCount);
                 atpUseCaseStatistics.setSuccessCount(sucInstanceCount);
                 atpUseCaseStatistics.setSuccessRate(100 * sucInstanceCount / totalInstanceCount);
@@ -81,10 +108,10 @@ public class AtpUsecaseServiceImpl implements AtpUsecaseService {
                 result.add(atpUseCaseStatistics);
             }
         }
-        // 分页
+        PageInfo<AtpUseCaseStatistics> atpUseCaseStatisticsPageInfo = new PageInfo<>(result);
 
         // 组装标签
-        return RpcResultUtils.suc(result);
+        return RpcResultUtils.suc(atpUseCaseStatisticsPageInfo);
     }
 
     // 用例执行、用例详情查询

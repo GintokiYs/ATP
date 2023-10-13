@@ -1,5 +1,6 @@
 package com.hundsun.atp.servers.controller;
 
+import com.github.pagehelper.PageInfo;
 import com.hundsun.atp.api.AtpUsecaseService;
 import com.hundsun.atp.common.domain.dto.usecase.AbstractUsecaseDto;
 import com.hundsun.atp.common.domain.dto.usecase.QueryUsecaseDto;
@@ -49,7 +50,7 @@ public class AtpUsecaseController {
 
     @PostMapping("/select")
     @ApiOperation("查询测试用例详情")
-    public RpcResultDTO<List<AtpUseCaseStatistics>> selectUseCaseInfo(@Validated @RequestBody QueryUsecaseDto queryUsecaseDto) {
+    public RpcResultDTO<PageInfo<AtpUseCaseStatistics>> selectUseCaseInfo(@Validated @RequestBody QueryUsecaseDto queryUsecaseDto) {
         return atpUsecaseService.selectUseCaseInfo(queryUsecaseDto);
     }
 }

@@ -10,6 +10,7 @@ import lombok.experimental.SuperBuilder;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * <p>
@@ -57,13 +58,13 @@ public class AtpUseCaseWithInstance implements Serializable {
     private String createUser;
 
     @ApiModelProperty("创建时间")
-    private LocalDateTime createTime;
+    private Date createTime;
 
     @ApiModelProperty("修改用户")
     private String updateUser;
 
     @ApiModelProperty("修改时间")
-    private LocalDateTime updateTime;
+    private Date updateTime;
 
     @ApiModelProperty("用例详情(具体的接口请求内容)")
     private String interfaceContent;
@@ -78,5 +79,5 @@ public class AtpUseCaseWithInstance implements Serializable {
     private String executeStatus;
 
     @ApiModelProperty("实例变更时间")
-    private String bussinessTime;
+    private Date bussinessTime;
 }

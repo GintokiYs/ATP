@@ -21,7 +21,9 @@ import java.util.List;
 @Mapper
 public interface AtpUseCaseMapper extends BaseMapper<AtpUseCase> {
 
-    List<AtpUseCaseWithInstance> selectUseCaseInfo(@Param("folderId") String foldId,
-                                                   @Param("name") String name,
-                                                   @Param("checkResult") String checkResult);
+    List<AtpUseCaseWithInstance> selectUseCaseWithInstanceInfo(@Param("caseIdList") List<String> caseIdList,
+                                                               @Param("checkResult") String checkResult);
+
+    List<AtpUseCase> selectUseCaseInfo(@Param("folderId") String foldId,
+                                       @Param("name") String name);
 }
