@@ -5,9 +5,11 @@ import com.hundsun.atp.common.domain.dto.usecase.AbstractUsecaseDto;
 import com.hundsun.atp.common.enums.UseCaseTypeEnum;
 import com.hundsun.atp.persister.mapper.AtpUseCaseMapper;
 import com.hundsun.atp.persister.model.AtpUseCase;
+import com.hundsun.atp.servers.service.business.caserun.ICaseRun;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -34,7 +36,7 @@ public abstract class AbstractUseCaseBusiness<IN, OUT, T extends ICaseRun<IN, OU
 
     public abstract UseCaseTypeEnum getUseCaseTypeEnum();
 
-    public abstract List<AtpUseCase> generateInsertRecord(AbstractUsecaseDto usecase);
+    public abstract List<AtpUseCase> generateInsertRecord(AbstractUsecaseDto usecase) throws Exception ;
 
     /**
      * 执行测试用例并获取执行结果

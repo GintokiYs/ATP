@@ -14,7 +14,7 @@ import com.hundsun.atp.common.enums.UseCaseTypeEnum;
 import com.hundsun.atp.common.prompt.LLMEnum;
 import com.hundsun.atp.persister.model.AtpUseCase;
 import com.hundsun.atp.servers.prompt.LLMApiUtils;
-import com.hundsun.atp.servers.prompt.tcase.PostInterfaceCaseCreate;
+import com.hundsun.atp.servers.prompt.casecreate.PostInterfaceCaseCreate;
 import com.hundsun.atp.servers.service.business.caserun.impl.http.HttpPostCaseParams;
 import com.hundsun.atp.servers.service.business.caserun.impl.http.HttpPostCaseRunBusiness;
 import com.hundsun.atp.servers.utils.HttpUtils;
