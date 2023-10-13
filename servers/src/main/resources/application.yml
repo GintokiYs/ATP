@@ -38,7 +38,7 @@ spring:
 server:
   shutdown: graceful
   servlet:
-#    context-path: /atp
+    context-path: /atp
     session:
       timeout: 60m
 app:

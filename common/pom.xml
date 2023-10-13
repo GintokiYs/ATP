@@ -15,8 +15,8 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-<!--            <scope>provided</scope>-->
-<!--            <optional>true</optional>-->
+            <!--            <scope>provided</scope>-->
+            <!--            <optional>true</optional>-->
         </dependency>
         <dependency>
             <groupId>io.springfox</groupId>
@@ -60,15 +60,15 @@
             <version>2.8.0</version>
         </dependency>
         <!--为slf4j绑定日志实现 log4j2的适配器 -->
-<!--        <dependency>-->
-<!--            <groupId>org.apache.logging.log4j</groupId>-->
-<!--            <artifactId>log4j-slf4j-impl</artifactId>-->
-<!--        </dependency>-->
-<!--        &lt;!&ndash;    Log4j2的日志实现   &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>org.apache.logging.log4j</groupId>-->
-<!--            <artifactId>log4j-core</artifactId>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.apache.logging.log4j</groupId>-->
+        <!--            <artifactId>log4j-slf4j-impl</artifactId>-->
+        <!--        </dependency>-->
+        <!--        &lt;!&ndash;    Log4j2的日志实现   &ndash;&gt;-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.apache.logging.log4j</groupId>-->
+        <!--            <artifactId>log4j-core</artifactId>-->
+        <!--        </dependency>-->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>

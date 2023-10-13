@@ -3,7 +3,8 @@ package com.hundsun.atp.common.domain.dto.usecase;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.hundsun.atp.common.domain.dto.tag.AtpTagInfoDto;
-import lombok.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.io.Serializable;
@@ -29,38 +30,20 @@ import java.util.Map;
 @Data
 @SuperBuilder
 @NoArgsConstructor
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "caseType", visible = true)
-@JsonSubTypes({
-        @JsonSubTypes.Type(value = InterfaceUsecaseDto.class, name = "1")
-})
-public abstract class AbstractUsecaseDto implements Serializable {
+public class QueryUsecaseDto implements Serializable {
     private static final long serialVersionUID = -1L;
 
-    private String caseId;
+    private String foldId;
+
+//    private String projectId;
 
     private String name;
 
-    private String folderId;
+    private List<String> tagIdList;
 
-    private String checkRule;
+    private String checkResult;
 
-    private Integer caseType;
+    private Integer pageSize;
 
-    private Map<String, String> executeConfig;
-
-    private List<AtpTagInfoDto> tags;
-
-    private Boolean enabled;
-
-    private String createUser;
-
-    private String operatorCode;
-
-    private String createTime;
-
-    private String updateUser;
-
-    private String updateTime;
-
-    private String remark;
+    private Integer pageNum;
 }
