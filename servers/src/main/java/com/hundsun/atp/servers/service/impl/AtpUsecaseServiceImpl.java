@@ -6,6 +6,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.hundsun.atp.api.AtpUsecaseService;
 import com.hundsun.atp.common.domain.dto.usecase.AbstractUsecaseDto;
+import com.hundsun.atp.common.domain.dto.usecase.DeleteUsecaseDto;
 import com.hundsun.atp.common.domain.dto.usecase.QueryUsecaseDto;
 import com.hundsun.atp.common.domain.entity.RpcResultDTO;
 import com.hundsun.atp.common.domain.entity.usecase.AtpUseCaseStatistics;
@@ -47,7 +48,7 @@ public class AtpUsecaseServiceImpl implements AtpUsecaseService {
     private AtpUseCaseInstanceBusiness atpUseCaseInstanceBusiness;
 
     @Override
-    public RpcResultDTO<Boolean> createUseCase(AbstractUsecaseDto usecase) {
+    public RpcResultDTO<Boolean> create(AbstractUsecaseDto usecase) {
         try {
             // 校验
 
@@ -119,6 +120,16 @@ public class AtpUsecaseServiceImpl implements AtpUsecaseService {
 
         // 组装标签
         return RpcResultUtils.suc(atpUseCaseStatisticsPageInfo);
+    }
+
+    @Override
+    public RpcResultDTO<Boolean> update(AbstractUsecaseDto usecaseDto) {
+        return null;
+    }
+
+    @Override
+    public RpcResultDTO<Boolean> delete(DeleteUsecaseDto deleteUsecaseDto) {
+        return null;
     }
 
     // 用例执行、用例详情查询
