@@ -1,9 +1,10 @@
 package com.hundsun.atp.servers.prompt;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.hundsun.atp.common.prompt.LLMEnum;
-import com.hundsun.atp.servers.prompt.tcase.PostInterfaceCaseCreate;
+import com.hundsun.atp.servers.prompt.casecreate.PostInterfaceCaseCreate;
 import org.junit.Test;
 
 public class PostInterfaceCaseCreateTest {
@@ -39,10 +40,16 @@ public class PostInterfaceCaseCreateTest {
                 "    private int type;\n" +
                 "\n" +
                 "}";
-        ArrayNode caseArray = PostInterfaceCaseCreate.createTestCaseByJavaCode(javaCode, dependentClass, 10);
+        String dependentClass2 = "public class User {private String name;      private Integer age;   private int userType;      private int userId;  } public enum UserType {      ADMIN(0),     SYSTEM(1),     USER(2),     GUEST(3);      private int type;  }";
+        ArrayNode caseArray = PostInterfaceCaseCreate.createTestCaseByJavaCode(javaCode, dependentClass2, 10);
         ObjectMapper objectMapper = new ObjectMapper();
         String caseStr = objectMapper.writeValueAsString(caseArray);
         System.out.println(caseStr);
+        System.out.println("=============");
+        for (JsonNode jsonNode : caseArray) {
+            String caseStrTmp = objectMapper.writeValueAsString(jsonNode);
+            System.out.println(caseStrTmp);
+        }
     }
 
 

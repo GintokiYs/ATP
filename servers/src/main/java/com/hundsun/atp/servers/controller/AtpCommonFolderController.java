@@ -2,6 +2,7 @@ package com.hundsun.atp.servers.controller;
 
 import com.hundsun.atp.api.folder.AtpFolderService;
 import com.hundsun.atp.common.domain.dto.folder.AtpCommonFolderDto;
+import com.hundsun.atp.common.domain.dto.folder.AtpTreeQueryDto;
 import com.hundsun.atp.common.domain.dto.usecase.InterfaceUsecaseDto;
 import com.hundsun.atp.common.domain.entity.RpcResultDTO;
 import com.hundsun.atp.common.domain.vo.folder.AtpCommonFolderVo;
@@ -52,13 +53,13 @@ public class AtpCommonFolderController {
     /**
      * 目录树展示,获取平铺的文件夹
      *
-     * @param projectId
+     * @param atpTreeQueryDto
      * @return
      */
     @PostMapping("/selectFlatFolders")
     @ApiOperation("目录树展示")
-    RpcResultDTO<List<AtpCommonFolderVo>> selectFlatFolders(@RequestParam String projectId) {
-        return atpFolderService.selectFlatFolders(projectId);
+    RpcResultDTO<List<AtpCommonFolderVo>> selectFlatFolders(@Validated @RequestBody AtpTreeQueryDto atpTreeQueryDto) {
+        return atpFolderService.selectFlatFolders(atpTreeQueryDto.getProjectId());
     }
 
     /**

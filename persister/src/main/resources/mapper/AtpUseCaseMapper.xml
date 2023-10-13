@@ -4,20 +4,41 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.hundsun.atp.persister.model.AtpUseCase">
-        <id column="id" property="id" />
-        <result column="case_id" property="caseId" />
-        <result column="name" property="name" />
-        <result column="folder_id" property="folderId" />
-        <result column="check_rule" property="checkRule" />
-        <result column="case_type" property="caseType" />
-        <result column="execute_config" property="executeConfig" />
-        <result column="enabled" property="enabled" />
-        <result column="create_user" property="createUser" />
-        <result column="create_time" property="createTime" />
-        <result column="update_user" property="updateUser" />
-        <result column="update_time" property="updateTime" />
-        <result column="interface_content" property="interfaceContent" />
-        <result column="remark" property="remark" />
+        <id column="id" property="id"/>
+        <result column="case_id" property="caseId"/>
+        <result column="name" property="name"/>
+        <result column="folder_id" property="folderId"/>
+        <result column="check_rule" property="checkRule"/>
+        <result column="case_type" property="caseType"/>
+        <result column="execute_config" property="executeConfig"/>
+        <result column="enabled" property="enabled"/>
+        <result column="create_user" property="createUser"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_user" property="updateUser"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="interface_content" property="interfaceContent"/>
+        <result column="remark" property="remark"/>
+    </resultMap>
+
+    <resultMap id="AtpUseCaseWithInstanceMap"
+               type="com.hundsun.atp.common.domain.entity.usecase.AtpUseCaseWithInstance">
+        <id column="id" property="id"/>
+        <result column="case_id" property="caseId"/>
+        <result column="name" property="name"/>
+        <result column="folder_id" property="folderId"/>
+        <result column="check_rule" property="checkRule"/>
+        <result column="case_type" property="caseType"/>
+        <result column="execute_config" property="executeConfig"/>
+        <result column="enabled" property="enabled"/>
+        <result column="create_user" property="createUser"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_user" property="updateUser"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="interface_content" property="interfaceContent"/>
+        <result column="remark" property="remark"/>
+        <result column="instance_id" property="instanceId"/>
+        <result column="execute_status" property="executeStatus"/>
+        <result column="bussiness_time" property="bussinessTime"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
@@ -37,9 +58,91 @@
         </if>
     </select>
 
-    <select id="selectUseCaseInfo">
+    <select id="selectUseCaseWithInstanceInfo" resultMap="AtpUseCaseWithInstanceMap">
+        select
+        a.id,
+        a.case_id,
+        a.name,
+        a.folder_id,
+        a.check_rule,
+        a.case_type,
+        a.execute_config,
+        a.enabled,
+        a.create_user,
+        a.create_time,
+        a.update_user,
+        a.update_time,
+        a.interface_content,
+        a.remark,
+        b.instance_id,
+        b.execute_status,
+        b.bussiness_time
+        from atp_use_case as a
+        left join atp_use_case_instance as b
+        on a.case_id = b.use_case_id
+        where a.enabled = 1
+        <if test="folderId != null and folderId != ''">
+            and a.folder_id = #{folderId}
+        </if>
+        <if test="name != null and name != ''">
+            and UPPER(a.name) like concat('%',UPPER(#{name}),'%')
+        </if>
+        <if test="checkResult != null and checkResult != ''">
+            and b.execute_status = #{checkResult}
+        </if>
+        order by a.case_id , b.bussiness_time desc
+    </select>
 
-
+    
+    <select id="queryUseCaseInfoList" resultMap="BaseResultMap">
+        select
+        a.id,
+        a.case_id,
+        a.name,
+        a.folder_id,
+        a.check_rule,
+        a.case_type,
+        a.execute_config,
+        a.enabled,
+        a.create_user,
+        a.create_time,
+        a.update_user,
+        a.update_time,
+        a.interface_content,
+        a.remark
+        from atp_use_case as a
+        where a.enabled = 1 and
+        WHERE a.id IN
+        <foreach item="caseId" collection="caseIdList" open="(" separator="," close=")">
+            #{caseId}
+        </foreach>
+    </select>
+    
+    <select id="selectUseCaseInfo" resultMap="BaseResultMap">
+        select
+        a.id,
+        a.case_id,
+        a.name,
+        a.folder_id,
+        a.check_rule,
+        a.case_type,
+        a.execute_config,
+        a.enabled,
+        a.create_user,
+        a.create_time,
+        a.update_user,
+        a.update_time,
+        a.interface_content,
+        a.remark
+        from atp_use_case as a
+        where a.enabled = 1
+        <if test="folderId != null and folderId != ''">
+            and a.folder_id = #{folderId}
+        </if>
+        <if test="name != null and name != ''">
+            and UPPER(a.name) like concat('%',UPPER(#{name}),'%')
+        </if>
+        order by a.update_time desc
     </select>
 
 </mapper>

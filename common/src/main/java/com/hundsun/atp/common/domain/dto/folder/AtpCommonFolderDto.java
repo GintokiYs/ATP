@@ -11,6 +11,7 @@ import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
 
 import java.util.Date;
+import java.util.Map;
 
 /**
  * <p>
@@ -51,7 +52,7 @@ public class AtpCommonFolderDto extends AtpBaseDto {
     private Integer enabled;
 
     @ApiModelProperty("执行配置,Map<String,String>")
-    private String executeConfig;
+    private Map<String, String> executeConfig;
 
     @ApiModelProperty("创建者")
     private String createUser;
