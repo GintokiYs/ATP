@@ -6,6 +6,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.hundsun.atp.api.AtpUsecaseService;
 import com.hundsun.atp.common.domain.dto.usecase.AbstractUsecaseDto;
+import com.hundsun.atp.common.domain.dto.usecase.DeleteUsecaseDto;
 import com.hundsun.atp.common.domain.dto.usecase.QueryUsecaseDto;
 import com.hundsun.atp.common.domain.entity.RpcResultDTO;
 import com.hundsun.atp.common.domain.entity.usecase.AtpUseCaseStatistics;
@@ -21,6 +22,7 @@ import com.hundsun.atp.servers.service.business.AbstractUseCaseBusiness;
 import com.hundsun.atp.servers.service.business.AtpUseCaseInstanceBusiness;
 import com.hundsun.atp.servers.service.business.factory.UseCaseBusinessFactory;
 import com.hundsun.atp.servers.service.convert.UseCaseConvert;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +33,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class AtpUsecaseServiceImpl implements AtpUsecaseService {
     @Autowired
     private UseCaseBusinessFactory useCaseBusinessFactory;
@@ -45,16 +48,21 @@ public class AtpUsecaseServiceImpl implements AtpUsecaseService {
     private AtpUseCaseInstanceBusiness atpUseCaseInstanceBusiness;
 
     @Override
-    public RpcResultDTO<Boolean> createUseCase(AbstractUsecaseDto usecase) {
-        // 校验
+    public RpcResultDTO<Boolean> create(AbstractUsecaseDto usecase) {
+        try {
+            // 校验
 
-        // 根据type类型获取不同的business
-        UseCaseTypeEnum useCaseTypeEnum = UseCaseTypeEnum.getByCode(usecase.getCaseType());
-        AbstractUseCaseBusiness abstractUseCaseBusiness = useCaseBusinessFactory.buildBusiness(useCaseTypeEnum);
-        List<AtpUseCase> atpUseCases = abstractUseCaseBusiness.generateInsertRecord(usecase);
-        boolean b = abstractUseCaseBusiness.saveBatch(atpUseCases);
-        // 标签关系添加
-        return RpcResultUtils.suc(true);
+            // 根据type类型获取不同的business
+            UseCaseTypeEnum useCaseTypeEnum = UseCaseTypeEnum.getByCode(usecase.getCaseType());
+            AbstractUseCaseBusiness abstractUseCaseBusiness = useCaseBusinessFactory.buildBusiness(useCaseTypeEnum);
+            List<AtpUseCase> atpUseCases = abstractUseCaseBusiness.generateInsertRecord(usecase);
+            boolean b = abstractUseCaseBusiness.saveBatch(atpUseCases);
+            // 标签关系添加
+            return RpcResultUtils.suc(true);
+        } catch (Exception e) {
+            log.error("createUseCase fail , error message is :", e);
+            return RpcResultUtils.suc(false);
+        }
     }
 
     @Override
@@ -112,6 +120,16 @@ public class AtpUsecaseServiceImpl implements AtpUsecaseService {
 
         // 组装标签
         return RpcResultUtils.suc(atpUseCaseStatisticsPageInfo);
+    }
+
+    @Override
+    public RpcResultDTO<Boolean> update(AbstractUsecaseDto usecaseDto) {
+        return null;
+    }
+
+    @Override
+    public RpcResultDTO<Boolean> delete(DeleteUsecaseDto deleteUsecaseDto) {
+        return null;
     }
 
     // 用例执行、用例详情查询

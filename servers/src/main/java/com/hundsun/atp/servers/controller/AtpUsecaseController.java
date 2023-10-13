@@ -3,6 +3,7 @@ package com.hundsun.atp.servers.controller;
 import com.github.pagehelper.PageInfo;
 import com.hundsun.atp.api.AtpUsecaseService;
 import com.hundsun.atp.common.domain.dto.usecase.AbstractUsecaseDto;
+import com.hundsun.atp.common.domain.dto.usecase.DeleteUsecaseDto;
 import com.hundsun.atp.common.domain.dto.usecase.QueryUsecaseDto;
 import com.hundsun.atp.common.domain.entity.RpcResultDTO;
 import com.hundsun.atp.common.domain.entity.usecase.AtpUseCaseStatistics;
@@ -44,13 +45,25 @@ public class AtpUsecaseController {
 
     @PostMapping("/create")
     @ApiOperation("新建测试用例")
-    public RpcResultDTO<Boolean> createUseCase(@Validated @RequestBody AbstractUsecaseDto usecaseDto) {
-        return atpUsecaseService.createUseCase(usecaseDto);
+    public RpcResultDTO<Boolean> create(@Validated @RequestBody AbstractUsecaseDto usecaseDto) {
+        return atpUsecaseService.create(usecaseDto);
     }
 
-    @PostMapping("/select")
+    @PostMapping("/selectUseCaseInfo")
     @ApiOperation("查询测试用例详情")
     public RpcResultDTO<PageInfo<AtpUseCaseStatistics>> selectUseCaseInfo(@Validated @RequestBody QueryUsecaseDto queryUsecaseDto) {
         return atpUsecaseService.selectUseCaseInfo(queryUsecaseDto);
+    }
+
+    @PostMapping("/update")
+    @ApiOperation("编辑测试用例")
+    public RpcResultDTO<Boolean> update(@Validated @RequestBody AbstractUsecaseDto usecaseDto) {
+        return atpUsecaseService.update(usecaseDto);
+    }
+
+    @PostMapping("/delete")
+    @ApiOperation("删除测试用例")
+    public RpcResultDTO<Boolean> delete(@Validated @RequestBody DeleteUsecaseDto deleteUsecaseDto) {
+        return atpUsecaseService.delete(deleteUsecaseDto);
     }
 }
