@@ -21,6 +21,7 @@ import com.hundsun.atp.servers.service.business.AbstractUseCaseBusiness;
 import com.hundsun.atp.servers.service.business.AtpUseCaseInstanceBusiness;
 import com.hundsun.atp.servers.service.business.factory.UseCaseBusinessFactory;
 import com.hundsun.atp.servers.service.convert.UseCaseConvert;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +32,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class AtpUsecaseServiceImpl implements AtpUsecaseService {
     @Autowired
     private UseCaseBusinessFactory useCaseBusinessFactory;
@@ -46,15 +48,20 @@ public class AtpUsecaseServiceImpl implements AtpUsecaseService {
 
     @Override
     public RpcResultDTO<Boolean> createUseCase(AbstractUsecaseDto usecase) {
-        // 校验
+        try {
+            // 校验
 
-        // 根据type类型获取不同的business
-        UseCaseTypeEnum useCaseTypeEnum = UseCaseTypeEnum.getByCode(usecase.getCaseType());
-        AbstractUseCaseBusiness abstractUseCaseBusiness = useCaseBusinessFactory.buildBusiness(useCaseTypeEnum);
-        List<AtpUseCase> atpUseCases = abstractUseCaseBusiness.generateInsertRecord(usecase);
-        boolean b = abstractUseCaseBusiness.saveBatch(atpUseCases);
-        // 标签关系添加
-        return RpcResultUtils.suc(true);
+            // 根据type类型获取不同的business
+            UseCaseTypeEnum useCaseTypeEnum = UseCaseTypeEnum.getByCode(usecase.getCaseType());
+            AbstractUseCaseBusiness abstractUseCaseBusiness = useCaseBusinessFactory.buildBusiness(useCaseTypeEnum);
+            List<AtpUseCase> atpUseCases = abstractUseCaseBusiness.generateInsertRecord(usecase);
+            boolean b = abstractUseCaseBusiness.saveBatch(atpUseCases);
+            // 标签关系添加
+            return RpcResultUtils.suc(true);
+        } catch (Exception e) {
+            log.error("createUseCase fail , error message is :", e);
+            return RpcResultUtils.suc(false);
+        }
     }
 
     @Override
