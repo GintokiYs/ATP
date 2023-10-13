@@ -43,7 +43,6 @@ public class AtpTagInfoServiceImpl implements AtpTagInfoService {
 
     @Override
     public RpcResultDTO<Boolean> createTagInfo(AtpTagInfoDto tagInfoDto) {
-        Boolean createFlag = atpTagInfoBusiness.createTagInfo(tagInfoDto);
         return RpcResultUtils.suc(atpTagInfoBusiness.createTagInfo(tagInfoDto));
     }
 

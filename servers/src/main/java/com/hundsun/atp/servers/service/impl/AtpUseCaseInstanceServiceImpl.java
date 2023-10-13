@@ -7,17 +7,10 @@ import com.hundsun.atp.common.domain.entity.RpcResultDTO;
 import com.hundsun.atp.common.enums.UseCaseTypeEnum;
 import com.hundsun.atp.persister.model.AtpCommonFolder;
 import com.hundsun.atp.persister.model.AtpUseCase;
-import com.hundsun.atp.servers.service.business.AbstractUseCaseBusiness;
 import com.hundsun.atp.servers.service.business.AtpCommonFolderBusiness;
 import com.hundsun.atp.servers.service.business.AtpInterfaceUseCaseBusiness;
-import com.hundsun.atp.api.usecaseinstance.AtpUseCaseInstanceService;
-import com.hundsun.atp.common.domain.dto.usecaseinstance.InterfaceUsecaseInstanceDto;
-import com.hundsun.atp.common.domain.entity.RpcResultDTO;
-import com.hundsun.atp.common.util.RpcResultUtils;
 import com.hundsun.atp.servers.service.business.AtpTagInfoBusiness;
-import com.hundsun.atp.servers.service.business.AtpUseCaseInstanceBusiness;
 import com.hundsun.atp.servers.service.business.caserun.impl.http.HttpPostCaseParams;
-import com.hundsun.atp.servers.service.business.caserun.impl.http.HttpPostCaseRunBusiness;
 import com.hundsun.atp.servers.service.business.factory.UseCaseBusinessFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,10 +31,6 @@ import java.util.List;
  */
 @Service
 public class AtpUseCaseInstanceServiceImpl implements AtpUseCaseInstanceService {
-    @Override
-    public RpcResultDTO<Boolean> editInstanceTag(InterfaceUsecaseInstanceDto interfaceUsecaseInstanceDto) {
-        return null;
-    }
 
     private static Logger logger = LoggerFactory.getLogger(AtpUseCaseInstanceServiceImpl.class);
 

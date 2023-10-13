@@ -8,7 +8,7 @@ import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.hundsun.atp.api.AtpUsecaseService;
+//import com.hundsun.atp.api.AtpUsecaseService;
 import com.hundsun.atp.common.domain.dto.usecase.AbstractUsecaseDto;
 import com.hundsun.atp.common.domain.dto.usecase.DeleteUsecaseDto;
 import com.hundsun.atp.common.domain.dto.usecase.QueryUsecaseDto;
@@ -154,6 +154,11 @@ public class AtpUsecaseServiceImpl implements AtpUsecaseService {
 
     @Override
     public RpcResultDTO<Boolean> delete(DeleteUsecaseDto deleteUsecaseDto) {
+        return null;
+    }
+
+    @Override
+    public RpcResultDTO<Boolean> createUseCase(AbstractUsecaseDto usecase) {
         return null;
     }
 
