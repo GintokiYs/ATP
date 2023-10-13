@@ -1,0 +1,71 @@
+package com.hundsun.atp.common.domain.vo.usecase;
+
+import com.hundsun.atp.common.domain.dto.tag.AtpTagInfoDto;
+import com.hundsun.atp.common.domain.vo.AtpBaseVo;
+import com.hundsun.atp.common.domain.vo.taginfo.AtpTagInfoVo;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+@SuperBuilder
+@Data
+@Accessors(chain = true)
+@ApiModel(value = "AtpUseCase对象")
+@AllArgsConstructor
+@NoArgsConstructor
+public abstract class AbstractUsecaseVo extends AtpBaseVo {
+
+    private static final long serialVersionUID = 1L;
+
+    @ApiModelProperty("主键")
+    private String id;
+
+    @ApiModelProperty("用例id")
+    private String caseId;
+
+    @ApiModelProperty("用例名称")
+    private String name;
+
+    @ApiModelProperty("所属用例集Id")
+    private String folderId;
+
+    @ApiModelProperty("检查规则")
+    private String checkRule;
+
+    @ApiModelProperty("用例类型")
+    private String caseType;
+
+    @ApiModelProperty("执行配置,Map<String,String>")
+    private String executeConfig;
+
+    @ApiModelProperty("已选标签")
+    private List<AtpTagInfoVo> tags;
+
+    @ApiModelProperty("是否生效(-1: 已删除, 0: 未生效, 1: 已生效)")
+    private Integer enabled;
+
+    @ApiModelProperty("创建用户")
+    private String createUser;
+
+    @ApiModelProperty("创建时间")
+    private LocalDateTime createTime;
+
+    @ApiModelProperty("修改用户")
+    private String updateUser;
+
+    @ApiModelProperty("修改时间")
+    private LocalDateTime updateTime;
+
+    @ApiModelProperty("用例详情(具体的接口请求内容)")
+    private String interfaceContent;
+
+    @ApiModelProperty("备注")
+    private String remark;
+}

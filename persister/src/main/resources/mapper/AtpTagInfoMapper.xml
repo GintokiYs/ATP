@@ -16,5 +16,28 @@
     <sql id="Base_Column_List">
         id, tag_id, tag_key, tag_value, enabled, project_id
     </sql>
+    <delete id="deleteByTagId">
+        delete from atp_tag_info where tag_id = #{tagId}
+    </delete>
+    <select id="selectAllTagInfo" resultType="com.hundsun.atp.persister.model.AtpTagInfo">
+        select * from atp_tag_info
+    </select>
+
+    <select id="selectByTagIds" resultType="com.hundsun.atp.persister.model.AtpTagInfo">
+        select * from atp_tag_info
+        <if test="tagIds != null and tagIds.size() > 0">
+            where tag_id in
+            <foreach collection="tagIds" item="tagId" open="(" separator="," close=")">
+                #{tagId}
+            </foreach>
+        </if>
+        <if test="tagIds == null or tagIds.size() == 0">
+            where 1=0 <!-- 返回空结果集 -->
+        </if>
+    </select>
+    <select id="selectByTagId" resultType="java.lang.String">
+        select id from atp_tag_info
+        where tag_id = #{tagId}
+    </select>
 
 </mapper>

@@ -46,4 +46,8 @@ public class AtpRefTagUseCase implements Serializable {
     @ApiModelProperty("空间id")
     @TableField(value = "project_id")
     private String projectId;
+
+    @ApiModelProperty("用例集id")
+    @TableField(value = "folder_id")
+    private String folderId;
 }

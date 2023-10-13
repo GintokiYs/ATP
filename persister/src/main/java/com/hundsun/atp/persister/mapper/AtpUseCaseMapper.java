@@ -10,6 +10,9 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * <p>
  * 用例详情 Mapper 接口
@@ -21,9 +24,13 @@ import java.util.List;
 @Mapper
 public interface AtpUseCaseMapper extends BaseMapper<AtpUseCase> {
 
+    List<AtpUseCase> selectByCaseIds(ArrayList<String> caseIds);
+    void selectUseCaseInfo(String foldId, String name, String checkResult);
     List<AtpUseCaseWithInstance> selectUseCaseWithInstanceInfo(@Param("caseIdList") List<String> caseIdList,
                                                                @Param("checkResult") String checkResult);
 
     List<AtpUseCase> selectUseCaseInfo(@Param("folderId") String foldId,
                                        @Param("name") String name);
+
+    List<AtpUseCase> queryUseCaseInfoList(@Param("caseIdList") List<Long> caseIdList);
 }

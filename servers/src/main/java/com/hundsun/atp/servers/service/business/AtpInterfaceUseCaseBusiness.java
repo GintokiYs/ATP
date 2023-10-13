@@ -90,4 +90,27 @@ public class AtpInterfaceUseCaseBusiness extends AbstractUseCaseBusiness {
 
         return result;
     }
+
+
+    public static class TestHttpPostCaseParams {
+        private AtpUseCase atpUseCase;
+        private String url;
+
+        public AtpUseCase getAtpUseCase() {
+            return atpUseCase;
+        }
+
+        public void setAtpUseCase(AtpUseCase atpUseCase) {
+            this.atpUseCase = atpUseCase;
+        }
+
+        public String getUrl() {
+            return url;
+        }
+
+        public void setUrl(String url) {
+            this.url = url;
+        }
+    }
+
 }
