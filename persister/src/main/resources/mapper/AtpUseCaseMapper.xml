@@ -81,6 +81,31 @@
         order by a.case_id , b.bussiness_time desc
     </select>
 
+    
+    <select id="queryUseCaseInfoList" resultMap="BaseResultMap">
+        select
+        a.id,
+        a.case_id,
+        a.name,
+        a.folder_id,
+        a.check_rule,
+        a.case_type,
+        a.execute_config,
+        a.enabled,
+        a.create_user,
+        a.create_time,
+        a.update_user,
+        a.update_time,
+        a.interface_content,
+        a.remark
+        from atp_use_case as a
+        where a.enabled = 1 and
+        WHERE a.id IN
+        <foreach item="caseId" collection="caseIdList" open="(" separator="," close=")">
+            #{caseId}
+        </foreach>
+    </select>
+    
     <select id="selectUseCaseInfo" resultMap="BaseResultMap">
         select
         a.id,

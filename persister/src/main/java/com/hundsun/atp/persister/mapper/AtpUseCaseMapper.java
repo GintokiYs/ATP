@@ -26,4 +26,6 @@ public interface AtpUseCaseMapper extends BaseMapper<AtpUseCase> {
 
     List<AtpUseCase> selectUseCaseInfo(@Param("folderId") String foldId,
                                        @Param("name") String name);
+
+    List<AtpUseCase> queryUseCaseInfoList(@Param("caseIdList") List<Long> caseIdList);
 }

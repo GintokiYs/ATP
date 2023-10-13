@@ -2,15 +2,24 @@ package com.hundsun.atp.servers.service.business;
 
 import cn.hutool.core.util.IdUtil;
 import com.alibaba.fastjson.JSON;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.hundsun.atp.common.domain.dto.usecase.AbstractUsecaseDto;
 import com.hundsun.atp.common.domain.dto.usecase.GptCaseInfo;
 import com.hundsun.atp.common.domain.dto.usecase.InterfaceUsecaseDto;
 import com.hundsun.atp.common.enums.EnableEnum;
 import com.hundsun.atp.common.enums.UseCaseTypeEnum;
 import com.hundsun.atp.persister.model.AtpUseCase;
+import com.hundsun.atp.servers.service.business.caserun.impl.http.HttpPostCaseParams;
+import com.hundsun.atp.servers.service.business.caserun.impl.http.HttpPostCaseRunBusiness;
+import com.hundsun.atp.servers.utils.HttpUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -22,7 +31,8 @@ import java.util.List;
  * @since 2023-09-27
  */
 @Service
-public class AtpInterfaceUseCaseBusiness extends AbstractUseCaseBusiness {
+public class AtpInterfaceUseCaseBusiness extends AbstractUseCaseBusiness<HttpPostCaseParams, JsonNode, HttpPostCaseRunBusiness> {
+    private Logger logger = LoggerFactory.getLogger(AtpInterfaceUseCaseBusiness.class);
 
     @Override
     public UseCaseTypeEnum getUseCaseTypeEnum() {
@@ -55,4 +65,27 @@ public class AtpInterfaceUseCaseBusiness extends AbstractUseCaseBusiness {
 
         return result;
     }
+
+
+    public static class TestHttpPostCaseParams {
+        private AtpUseCase atpUseCase;
+        private String url;
+
+        public AtpUseCase getAtpUseCase() {
+            return atpUseCase;
+        }
+
+        public void setAtpUseCase(AtpUseCase atpUseCase) {
+            this.atpUseCase = atpUseCase;
+        }
+
+        public String getUrl() {
+            return url;
+        }
+
+        public void setUrl(String url) {
+            this.url = url;
+        }
+    }
+
 }

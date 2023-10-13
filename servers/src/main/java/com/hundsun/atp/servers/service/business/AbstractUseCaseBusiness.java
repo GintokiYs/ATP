@@ -1,18 +1,27 @@
 package com.hundsun.atp.servers.service.business;
 
+import cn.hutool.core.map.MapUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hundsun.atp.common.domain.dto.usecase.AbstractUsecaseDto;
+import com.hundsun.atp.common.enums.EnableEnum;
 import com.hundsun.atp.common.enums.UseCaseTypeEnum;
 import com.hundsun.atp.persister.mapper.AtpUseCaseMapper;
+import com.hundsun.atp.persister.model.AtpCommonFolder;
 import com.hundsun.atp.persister.model.AtpUseCase;
+import com.hundsun.atp.servers.service.business.caserun.ICaseRun;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 
 /**
  * 文件描述
  *
+ * @param <OUT> 返回结果类型
+ * @param <IN> 输入类型
  * @ProductName: Hundsun HEP
  * @ProjectName: ATP
  * @Package: com.hundsun.atp.servers.service.business
@@ -28,9 +37,26 @@ import java.util.List;
  **/
 @Slf4j
 @Service
-public abstract class AbstractUseCaseBusiness extends ServiceImpl<AtpUseCaseMapper, AtpUseCase> {
+public abstract class AbstractUseCaseBusiness<IN, OUT, T extends ICaseRun<IN, OUT>> extends ServiceImpl<AtpUseCaseMapper, AtpUseCase> {
+
+    private T iCaseRun;
 
     public abstract UseCaseTypeEnum getUseCaseTypeEnum();
 
     public abstract List<AtpUseCase> generateInsertRecord(AbstractUsecaseDto usecase);
+
+    /**
+     * 执行测试用例并获取执行结果
+     * @param atpUseCase 测试用例信息
+
+     * @return OUT
+     */
+    public OUT testCase(IN atpUseCase) throws IOException {
+        return iCaseRun.excuteHttpPostCase(atpUseCase);
+    };
+
+    public List<AtpUseCase> queryUserCaseByCaseIdList(List<Long> caseIdList){
+        // 获取当前空间下所有的Folder
+        return this.baseMapper.queryUseCaseInfoList(caseIdList);
+    }
 }
