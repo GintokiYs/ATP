@@ -1,6 +1,9 @@
 package com.hundsun.atp.servers.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.convert.Convert;
+import cn.hutool.core.date.DateUtil;
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -11,8 +14,10 @@ import com.hundsun.atp.common.domain.dto.usecase.QueryUsecaseDto;
 import com.hundsun.atp.common.domain.entity.RpcResultDTO;
 import com.hundsun.atp.common.domain.entity.usecase.AtpUseCaseStatistics;
 import com.hundsun.atp.common.domain.entity.usecase.AtpUseCaseWithInstance;
+import com.hundsun.atp.common.enums.EnableEnum;
 import com.hundsun.atp.common.enums.ExecuteStatusEnum;
 import com.hundsun.atp.common.enums.UseCaseTypeEnum;
+import com.hundsun.atp.common.util.Precondition;
 import com.hundsun.atp.common.util.RpcResultUtils;
 import com.hundsun.atp.persister.mapper.AtpUseCaseMapper;
 import com.hundsun.atp.persister.model.AtpUseCase;
@@ -22,11 +27,13 @@ import com.hundsun.atp.servers.service.business.AbstractUseCaseBusiness;
 import com.hundsun.atp.servers.service.business.AtpUseCaseInstanceBusiness;
 import com.hundsun.atp.servers.service.business.factory.UseCaseBusinessFactory;
 import com.hundsun.atp.servers.service.convert.UseCaseConvert;
+import io.swagger.annotations.ExampleProperty;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -124,12 +131,53 @@ public class AtpUsecaseServiceImpl implements AtpUsecaseService {
 
     @Override
     public RpcResultDTO<Boolean> update(AbstractUsecaseDto usecaseDto) {
-        return null;
+        try {
+            UseCaseTypeEnum useCaseTypeEnum = UseCaseTypeEnum.getByCode(usecaseDto.getCaseType());
+            AbstractUseCaseBusiness abstractUseCaseBusinessImpl = useCaseBusinessFactory.buildBusiness(useCaseTypeEnum);
+            // 检查要更新的用例名称是否存在
+            String name = usecaseDto.getName();
+            QueryWrapper<AtpUseCase> duplicQueryWrapper = new QueryWrapper<>();
+            duplicQueryWrapper.eq("name", name).eq("folder_id", usecaseDto.getFolderId()).eq("enabled", EnableEnum.VALID.getCode());
+            long dulpCount = abstractUseCaseBusinessImpl.count(duplicQueryWrapper);
+            Precondition.checkIndexGreaterZero(Convert.toInt(dulpCount), "00000000", "用例集中已存在相同的用例名称");
+            // 检查用例是否存在
+            QueryWrapper<AtpUseCase> queryUseCaseWrapper = new QueryWrapper<>();
+            queryUseCaseWrapper.eq("id", usecaseDto.getId()).eq("enabled", EnableEnum.VALID.getCode());
+            long useCount = abstractUseCaseBusinessImpl.count(queryUseCaseWrapper);
+            Precondition.checkArgument(useCount != 1, "00000000", "数据库中该用例已不存在");
+
+            // 数据库更新用例记录
+            AtpUseCase atpUseCase = abstractUseCaseBusinessImpl.generateUpdateRecord(usecaseDto);
+
+            if (abstractUseCaseBusinessImpl.updateById(atpUseCase)) {
+                return RpcResultUtils.suc(true);
+            } else {
+                return RpcResultUtils.error("00000000", "更新数据库记录报错");
+            }
+        } catch (Exception e) {
+            log.error("update usecase fail,error message is: ", e);
+            return RpcResultUtils.error("00000000", "更新用例失败");
+        }
     }
 
     @Override
     public RpcResultDTO<Boolean> delete(DeleteUsecaseDto deleteUsecaseDto) {
-        return null;
+        try {
+            AtpUseCase atpUseCase = AtpUseCase.builder()
+                    .id(deleteUsecaseDto.getId())
+                    .enabled(EnableEnum.DELETE.getCode())
+                    .updateUser(deleteUsecaseDto.getOperatorCode())
+                    .updateTime(DateUtil.date())
+                    .build();
+            if (abstractUseCaseBusiness.updateById(atpUseCase)) {
+                return RpcResultUtils.suc(true);
+            } else {
+                return RpcResultUtils.error("00000000", "删除数据库记录报错");
+            }
+        } catch (Exception e) {
+            log.error("delete usecase fail,error message is: ", e);
+            return RpcResultUtils.error("00000000", "删除用例失败");
+        }
     }
 
     // 用例执行、用例详情查询

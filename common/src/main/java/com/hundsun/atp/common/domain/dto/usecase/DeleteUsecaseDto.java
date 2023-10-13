@@ -27,7 +27,7 @@ import java.util.List;
 public class DeleteUsecaseDto implements Serializable {
     private static final long serialVersionUID = -1L;
 
-    private String caseId;
+    private String id;
 
     private String operatorCode;
 

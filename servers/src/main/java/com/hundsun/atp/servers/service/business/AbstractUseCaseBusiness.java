@@ -33,4 +33,6 @@ public abstract class AbstractUseCaseBusiness extends ServiceImpl<AtpUseCaseMapp
     public abstract UseCaseTypeEnum getUseCaseTypeEnum();
 
     public abstract List<AtpUseCase> generateInsertRecord(AbstractUsecaseDto usecase) throws Exception;
+
+    public abstract AtpUseCase generateUpdateRecord(AbstractUsecaseDto usecaseDto);
 }

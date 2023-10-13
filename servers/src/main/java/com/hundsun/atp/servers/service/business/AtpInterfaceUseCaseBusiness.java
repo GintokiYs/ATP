@@ -1,5 +1,6 @@
 package com.hundsun.atp.servers.service.business;
 
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
 import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -13,7 +14,8 @@ import com.hundsun.atp.common.enums.UseCaseTypeEnum;
 import com.hundsun.atp.common.prompt.LLMEnum;
 import com.hundsun.atp.persister.model.AtpUseCase;
 import com.hundsun.atp.servers.prompt.LLMApiUtils;
-import com.hundsun.atp.servers.prompt.tcase.PostInterfaceCaseCreate;
+
+import com.hundsun.atp.servers.prompt.casecreate.PostInterfaceCaseCreate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -89,5 +91,18 @@ public class AtpInterfaceUseCaseBusiness extends AbstractUseCaseBusiness {
 
 
         return result;
+    }
+
+    @Override
+    public AtpUseCase generateUpdateRecord(AbstractUsecaseDto usecaseDto) {
+        AtpUseCase atpUseCase = AtpUseCase.builder()
+                .id(usecaseDto.getId())
+                .name(usecaseDto.getName())
+                .updateUser(usecaseDto.getOperatorCode())
+                .updateTime(DateUtil.date())
+                .executeConfig(usecaseDto.getExecuteConfig() == null ? null : JSON.toJSONString(usecaseDto.getExecuteConfig()))
+                .checkRule(usecaseDto.getCheckRule())
+                .build();
+        return atpUseCase;
     }
 }

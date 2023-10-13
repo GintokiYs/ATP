@@ -9,9 +9,11 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
+import org.apache.ibatis.annotations.Delete;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * <p>
@@ -70,7 +72,7 @@ public class AtpUseCase implements Serializable {
 
     @ApiModelProperty("创建时间")
     @TableField(value = "create_time")
-    private LocalDateTime createTime;
+    private Date createTime;
 
     @ApiModelProperty("修改用户")
     @TableField(value = "update_user")
@@ -78,7 +80,7 @@ public class AtpUseCase implements Serializable {
 
     @ApiModelProperty("修改时间")
     @TableField(value = "update_time")
-    private LocalDateTime updateTime;
+    private Date updateTime;
 
     @ApiModelProperty("用例详情(具体的接口请求内容)")
     @TableField(value = "interface_content")
