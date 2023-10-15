@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.hundsun.atp.common.domain.dto.folder.AtpCommonFolderDto;
 import com.hundsun.atp.common.domain.vo.folder.AtpCommonFolderVo;
 import com.hundsun.atp.common.domain.vo.folder.AtpCommonFolderVo.AtpCommonFolderVoBuilder;
+import com.hundsun.atp.common.enums.EnableEnum;
 import com.hundsun.atp.persister.model.AtpCommonFolder;
 import com.hundsun.atp.persister.model.AtpCommonFolder.AtpCommonFolderBuilder;
 
@@ -32,13 +33,8 @@ public class CommonFolderConvertImpl implements CommonFolderConvert {
         atpCommonFolder.folderType(atpCommonFolderDto.getFolderType());
         atpCommonFolder.parentUtreeid(atpCommonFolderDto.getParentUtreeid());
         atpCommonFolder.utreeid(atpCommonFolderDto.getUtreeid());
-        atpCommonFolder.enabled(atpCommonFolderDto.getEnabled());
         atpCommonFolder.projectId(atpCommonFolderDto.getProjectId());
         atpCommonFolder.executeConfig(JSON.toJSONString(atpCommonFolderDto.getExecuteConfig()));
-        atpCommonFolder.createUser(atpCommonFolderDto.getCreateUser());
-        atpCommonFolder.createTime(atpCommonFolderDto.getCreateTime());
-        atpCommonFolder.updateUser(atpCommonFolderDto.getUpdateUser());
-        atpCommonFolder.updateTime(atpCommonFolderDto.getUpdateTime());
         atpCommonFolder.remark(atpCommonFolderDto.getRemark());
 
         return atpCommonFolder.build();
@@ -68,7 +64,7 @@ public class CommonFolderConvertImpl implements CommonFolderConvert {
         atpCommonFolderVo.updateUser(atpCommonFolder.getUpdateUser());
         atpCommonFolderVo.updateTime(atpCommonFolder.getUpdateTime());
         atpCommonFolderVo.remark(atpCommonFolder.getRemark());
-
+        atpCommonFolderVo.enabled(EnableEnum.VALID.getCode());
         return atpCommonFolderVo.build();
     }
 

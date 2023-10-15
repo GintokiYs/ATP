@@ -123,7 +123,7 @@ public class AtpCommonFolderBusiness extends ServiceImpl<AtpCommonFolderMapper, 
                 Precondition.checkIndexGreaterZero(Convert.toInt(count), "000000", "检测到用例集下还有测试用例存在，请先删除测试用例");
             } else {
                 QueryWrapper<AtpCommonFolder> queryWrapper = new QueryWrapper<>();
-                queryWrapper.eq("folder_id", id).eq("enabled", EnableEnum.VALID.getCode());
+                queryWrapper.eq("parent_id", id).eq("enabled", EnableEnum.VALID.getCode());
                 Long count = atpCommonFolderMapper.selectCount(queryWrapper);
                 Precondition.checkIndexGreaterZero(Convert.toInt(count), "000000", "检测到还有子文件夹存在，请先删除子文件夹");
             }
@@ -132,7 +132,7 @@ public class AtpCommonFolderBusiness extends ServiceImpl<AtpCommonFolderMapper, 
             atpCommonFolderMapper.updateById(deleteAtpCommonFolder);
             return true;
         } catch (Exception e) {
-            log.error("delete folder fail,error message is:");
+            log.error("delete folder fail,error message is:", e);
             return false;
         }
 
@@ -247,9 +247,7 @@ public class AtpCommonFolderBusiness extends ServiceImpl<AtpCommonFolderMapper, 
             return false;
         }
         targetCommonFolder.setUpdateTime(new Date());
-        if (targetCommonFolder.getUpdateUser() == null) {
-            targetCommonFolder.setUpdateUser(atpCommonFolder.getCreateUser());
-        }
+        targetCommonFolder.setUpdateUser(atpCommonFolderDto.getOperatorCode());
         UpdateWrapper<AtpCommonFolder> folderUpdateWrapper = new UpdateWrapper<>();
         HashMap<String, Object> folderUpdateMap = MapUtil.newHashMap();
 

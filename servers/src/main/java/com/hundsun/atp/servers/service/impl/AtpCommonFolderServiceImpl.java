@@ -72,8 +72,10 @@ public class AtpCommonFolderServiceImpl implements AtpFolderService {
      */
     @Override
     public RpcResultDTO<Boolean> delete(String id, Integer folderType, String operatorCode) {
-        return RpcResultUtils.suc(atpCommonFolderBusiness.delete(id, folderType, operatorCode));
+        if (atpCommonFolderBusiness.delete(id, folderType, operatorCode)) {
+            return RpcResultUtils.suc(true);
+        } else {
+            return RpcResultUtils.error("000000", "删除目录失败");
+        }
     }
-
-
 }
