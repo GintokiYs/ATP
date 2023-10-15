@@ -4,6 +4,7 @@ package com.hundsun.atp.servers.service.impl;
 import com.hundsun.atp.api.taginfo.AtpTagInfoService;
 import com.hundsun.atp.common.domain.dto.folder.AtpCommonFolderDto;
 import com.hundsun.atp.common.domain.dto.tag.AtpTagInfoDto;
+import com.hundsun.atp.common.domain.dto.tag.AtpTagInfoQueryDto;
 import com.hundsun.atp.common.domain.entity.RpcResultDTO;
 import com.hundsun.atp.common.domain.vo.taginfo.AtpTagInfoVo;
 import com.hundsun.atp.common.util.RpcResultUtils;
@@ -40,7 +41,6 @@ public class AtpTagInfoServiceImpl implements AtpTagInfoService {
     private AtpRefTagUseCaseBusiness atpRefTagUseCaseBusiness;
 
 
-
     @Override
     public RpcResultDTO<Boolean> createTagInfo(AtpTagInfoDto tagInfoDto) {
         return RpcResultUtils.suc(atpTagInfoBusiness.createTagInfo(tagInfoDto));
@@ -59,8 +59,8 @@ public class AtpTagInfoServiceImpl implements AtpTagInfoService {
     }
 
     @Override
-    public RpcResultDTO<List<AtpTagInfoVo>> queryTagInfo() {
-        return RpcResultUtils.suc(atpTagInfoBusiness.queryTagInfo());
+    public RpcResultDTO<List<AtpTagInfoVo>> queryTagInfo(AtpTagInfoQueryDto atpTagInfoQueryDto) {
+        return RpcResultUtils.suc(atpTagInfoBusiness.queryTagInfo(atpTagInfoQueryDto.getCaseId(), atpTagInfoQueryDto.getProjectId()));
     }
 
     //用例查询用例集标签集合
@@ -78,13 +78,18 @@ public class AtpTagInfoServiceImpl implements AtpTagInfoService {
             ArrayList<AtpTagInfoVo> atpTagInfoVos = new ArrayList<>();
             for (AtpTagInfo atpTagInfo : atpTagInfos) {
                 AtpTagInfoVo atpTagInfoVo = new AtpTagInfoVo();
-                BeanUtils.copyProperties(atpTagInfo,atpTagInfoVo);
+                BeanUtils.copyProperties(atpTagInfo, atpTagInfoVo);
                 atpTagInfoVos.add(atpTagInfoVo);
             }
             return RpcResultUtils.suc(atpTagInfoVos);
         } catch (BeansException e) {
-            return RpcResultUtils.error("200000003","获取用例标签失败" + e.getMessage());
+            return RpcResultUtils.error("200000003", "获取用例标签失败" + e.getMessage());
         }
 
+    }
+
+    @Override
+    public RpcResultDTO<List<AtpTagInfoVo>> queryTagInfoAll() {
+        return RpcResultUtils.suc(atpTagInfoBusiness.queryTagInfoAll());
     }
 }

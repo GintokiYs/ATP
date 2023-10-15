@@ -64,8 +64,17 @@ public class AtpUsecaseController {
         return atpUsecaseService.selectUseCaseInfo(queryUsecaseDto);
     }
 
+    @PostMapping("/update")
+    @ApiOperation("编辑测试用例")
+    public RpcResultDTO<Boolean> update(@Validated @RequestBody AbstractUsecaseDto usecaseDto) {
+        return atpUsecaseService.update(usecaseDto);
+    }
 
-
+    @PostMapping("/delete")
+    @ApiOperation("删除测试用例")
+    public RpcResultDTO<Boolean> delete(@Validated @RequestBody DeleteUsecaseDto deleteUsecaseDto) {
+        return atpUsecaseService.delete(deleteUsecaseDto);
+    }
     //用例打标签（在用例上新增标签，再选中，相当于把选中的标签的List传给AtpUseCaseDto）
     @PostMapping("/edittags")
     @ApiOperation("用例实例上新增标签")
@@ -95,15 +104,4 @@ public class AtpUsecaseController {
         return atpUsecaseService.queryCasesByTags(atpTagInfoDtos);
     }
 
-    @PostMapping("/update")
-    @ApiOperation("编辑测试用例")
-    public RpcResultDTO<Boolean> update(@Validated @RequestBody AbstractUsecaseDto usecaseDto) {
-        return atpUsecaseService.update(usecaseDto);
-    }
-
-    @PostMapping("/delete")
-    @ApiOperation("删除测试用例")
-    public RpcResultDTO<Boolean> delete(@Validated @RequestBody DeleteUsecaseDto deleteUsecaseDto) {
-        return atpUsecaseService.delete(deleteUsecaseDto);
-    }
 }

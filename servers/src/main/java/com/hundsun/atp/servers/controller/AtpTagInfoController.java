@@ -3,6 +3,7 @@ package com.hundsun.atp.servers.controller;
 import com.hundsun.atp.api.taginfo.AtpTagInfoService;
 import com.hundsun.atp.api.usecase.AtpUsecaseService;
 import com.hundsun.atp.common.domain.dto.tag.AtpTagInfoDto;
+import com.hundsun.atp.common.domain.dto.tag.AtpTagInfoQueryDto;
 import com.hundsun.atp.common.domain.dto.usecase.AbstractUsecaseDto;
 import com.hundsun.atp.common.domain.entity.RpcResultDTO;
 import com.hundsun.atp.common.domain.vo.folder.AtpCommonFolderVo;
@@ -10,6 +11,7 @@ import com.hundsun.atp.common.domain.vo.taginfo.AtpTagInfoVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,6 +43,7 @@ public class AtpTagInfoController {
 
     @PostMapping("/delete")
     @ApiOperation("删除标签")
+    @Transactional
     public RpcResultDTO<Boolean> deleteTagInfo(@Validated @RequestBody AtpTagInfoDto tagInfoDto) {
 
         return atpTagInfoService.deleteTagInfo(tagInfoDto);
@@ -53,11 +56,18 @@ public class AtpTagInfoController {
         return atpTagInfoService.editTagInfo(tagInfoDto);
     }
 
+    @PostMapping("/queryAll")
+    @ApiOperation("查询所有标签")
+    public RpcResultDTO<List<AtpTagInfoVo>> queryTagInfoAll() {
+
+        return atpTagInfoService.queryTagInfoAll();
+    }
+
     @PostMapping("/query")
     @ApiOperation("查询标签")
-    public RpcResultDTO<List<AtpTagInfoVo>> queryTagInfo() {
+    public RpcResultDTO<List<AtpTagInfoVo>> queryTagInfo(@Validated @RequestBody AtpTagInfoQueryDto atpTagInfoQueryDto) {
 
-        return atpTagInfoService.queryTagInfo();
+        return atpTagInfoService.queryTagInfo(atpTagInfoQueryDto);
     }
 
 }

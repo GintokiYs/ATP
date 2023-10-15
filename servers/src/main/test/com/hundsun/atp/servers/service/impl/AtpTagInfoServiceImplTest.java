@@ -38,10 +38,9 @@ public class AtpTagInfoServiceImplTest {
         AtpTagInfoDto atpTagInfoDto = new AtpTagInfoDto();
         atpTagInfoDto.setTagId("testTagId");
         atpTagInfoDto.setTagKey("标签Test");
-        atpTagInfoDto.setEnabled(1);
         atpTagInfoDto.setProjectId("空间Test");
         RpcResultDTO<Boolean> resultCreate = atpTagInfoService.createTagInfo(atpTagInfoDto);
-        RpcResultDTO<List<AtpTagInfoVo>> listRpcResultDTO = atpTagInfoService.queryTagInfo();
+        RpcResultDTO<List<AtpTagInfoVo>> listRpcResultDTO = atpTagInfoService.queryTagInfoAll();
         System.out.println(listRpcResultDTO);
         String id = atpTagInfoMapper.selectByTagId(atpTagInfoDto.getTagId());
         List<String> tagIds = new ArrayList<>();
@@ -71,25 +70,21 @@ public class AtpTagInfoServiceImplTest {
         AtpTagInfoDto atpTagInfoDto1 = new AtpTagInfoDto();//要求有tagId,tagKey,enable,projectId
         atpTagInfoDto1.setTagId("createTagId1");
         atpTagInfoDto1.setTagKey("标签Test-create1");
-        atpTagInfoDto1.setEnabled(1);
         atpTagInfoDto1.setProjectId("空间Test");
 
         AtpTagInfoDto atpTagInfoDto2 = new AtpTagInfoDto();//要求有tagId,tagKey,enable,projectId
         atpTagInfoDto2.setTagId("createTagId2");
         atpTagInfoDto2.setTagKey("标签Test-create2");
-        atpTagInfoDto2.setEnabled(1);
         atpTagInfoDto2.setProjectId("空间Test");
 
         AtpTagInfoDto atpTagInfoDto3 = new AtpTagInfoDto();//要求有tagId,tagKey,enable,projectId
         atpTagInfoDto3.setTagId("createTagId3");
         atpTagInfoDto3.setTagKey("标签Test-create3");
-        atpTagInfoDto3.setEnabled(1);
         atpTagInfoDto3.setProjectId("空间Test");
 
         AtpTagInfoDto atpTagInfoDto4 = new AtpTagInfoDto();//要求有tagId,tagKey,enable,projectId
         atpTagInfoDto4.setTagId("createTagId4");
         atpTagInfoDto4.setTagKey("标签Test-create4");
-        atpTagInfoDto4.setEnabled(1);
         atpTagInfoDto4.setProjectId("空间Test");
 
         atpTagInfoService.createTagInfo(atpTagInfoDto1);

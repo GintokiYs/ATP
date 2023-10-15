@@ -11,9 +11,11 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hundsun.atp.common.domain.dto.tag.AtpTagInfoDto;
 import com.hundsun.atp.common.domain.vo.folder.AtpCommonFolderVo;
 import com.hundsun.atp.common.domain.vo.taginfo.AtpTagInfoVo;
+import com.hundsun.atp.common.enums.EnableEnum;
 import com.hundsun.atp.common.util.Precondition;
 import com.hundsun.atp.persister.mapper.AtpRefTagUseCaseMapper;
 import com.hundsun.atp.persister.mapper.AtpTagInfoMapper;
+import com.hundsun.atp.persister.model.AtpRefTagUseCase;
 import com.hundsun.atp.persister.model.AtpTagInfo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +43,7 @@ public class AtpTagInfoBusiness extends ServiceImpl<AtpTagInfoMapper, AtpTagInfo
 
     /**
      * 新建TagInfo
+     *
      * @param tagInfoDto
      * @return
      */
@@ -52,6 +55,7 @@ public class AtpTagInfoBusiness extends ServiceImpl<AtpTagInfoMapper, AtpTagInfo
 
     /**
      * 编辑TagInfo并更新
+     *
      * @param tagInfoDto
      * @return
      */
@@ -65,6 +69,7 @@ public class AtpTagInfoBusiness extends ServiceImpl<AtpTagInfoMapper, AtpTagInfo
 
     /**
      * 删除数据行
+     *
      * @param id
      * @return
      */
@@ -79,10 +84,16 @@ public class AtpTagInfoBusiness extends ServiceImpl<AtpTagInfoMapper, AtpTagInfo
 
     /**
      * 查询atp_tag_info表所有数据
+     *
      * @return
      */
-    public List<AtpTagInfoVo> queryTagInfo() {
-        List<AtpTagInfo> tagInfoList = atpTagInfoMapper.selectAllTagInfo(); // 通过Mapper获取所有tag_info数据
+    public List<AtpTagInfoVo> queryTagInfo(String caseId, String projectId) {
+        QueryWrapper<AtpRefTagUseCase> taginfoQueryWrapper = new QueryWrapper<>();
+        QueryWrapper<AtpRefTagUseCase> useCaseQueryWrapper = taginfoQueryWrapper.eq("case_id", caseId).eq("project_id", projectId);
+        List<AtpRefTagUseCase> atpRefTagUseCases = atpRefTagUseCaseMapper.selectList(useCaseQueryWrapper);
+        List<String> tagInfoCollect = atpRefTagUseCases.stream().map(AtpRefTagUseCase::getTagId).collect(Collectors.toList());
+
+        List<AtpTagInfo> tagInfoList = atpTagInfoMapper.selectByTagIds(tagInfoCollect); // 通过Mapper获取所有tag_info数据
 
         // 使用Java 8 Stream将AtpTagInfo对象列表直接映射到AtpTagInfoVo对象列表
         List<AtpTagInfoVo> tagInfoVoList = tagInfoList.stream()
@@ -114,6 +125,7 @@ public class AtpTagInfoBusiness extends ServiceImpl<AtpTagInfoMapper, AtpTagInfo
 
     /**
      * 插入数据行
+     *
      * @param tagInfoDto
      * @return
      */
@@ -123,6 +135,8 @@ public class AtpTagInfoBusiness extends ServiceImpl<AtpTagInfoMapper, AtpTagInfo
         BeanUtils.copyProperties(tagInfoDto, atpTagInfo);
 
         atpTagInfo.setId(IdUtil.simpleUUID());
+        atpTagInfo.setTagId(IdUtil.simpleUUID());
+        atpTagInfo.setEnabled(EnableEnum.VALID.getCode());
         int insertCount = atpTagInfoMapper.insert(atpTagInfo);
         return insertCount > 0;
     }
@@ -131,6 +145,7 @@ public class AtpTagInfoBusiness extends ServiceImpl<AtpTagInfoMapper, AtpTagInfo
 
     /**
      * 更新数据行
+     *
      * @param tagInfoDto
      * @return
      */
@@ -144,13 +159,13 @@ public class AtpTagInfoBusiness extends ServiceImpl<AtpTagInfoMapper, AtpTagInfo
                 .eq("id", atpTagInfo.getId());
 
         // 调用AtpTagInfoMapper的更新方法来更新数据
-        int rowsUpdated = atpTagInfoMapper.update(atpTagInfo,updateWrapper);
+        int rowsUpdated = atpTagInfoMapper.update(atpTagInfo, updateWrapper);
 
         // 根据更新的行数判断更新是否成功
         return rowsUpdated > 0;
     }
 
-    public AtpTagInfo queryByTagKey(String tagKey){
+    public AtpTagInfo queryByTagKey(String tagKey) {
         QueryWrapper<AtpTagInfo> queryWrapper = new QueryWrapper<>();
         HashMap<String, Object> queryMap = MapUtil.newHashMap();
         queryMap.put("tag_key", tagKey);
@@ -198,15 +213,31 @@ public class AtpTagInfoBusiness extends ServiceImpl<AtpTagInfoMapper, AtpTagInfo
         atpTagInfoMapper.deleteByTagId(tagId);
     }
 
-    @Transactional
+
     public boolean deleteTagAndRef(String tagId) {
         //先删tag_info里的数据
         int deleteTagInfoByTagIdCount = atpTagInfoMapper.deleteByTagId(tagId);
-        if (deleteTagInfoByTagIdCount > 0 ){
+        if (deleteTagInfoByTagIdCount > 0) {
             //再删关联表数据
             int deleteRefByTagIdCount = atpRefTagUseCaseMapper.deleteByTagId(tagId);
             return deleteRefByTagIdCount >= 0;
         }
         return false;
+    }
+
+    public List<AtpTagInfoVo> queryTagInfoAll() {
+        // 通过Mapper获取所有tag_info数据
+        List<AtpTagInfo> tagInfoList = atpTagInfoMapper.selectAllTagInfo();
+
+        // 使用Java 8 Stream将AtpTagInfo对象列表直接映射到AtpTagInfoVo对象列表
+        List<AtpTagInfoVo> tagInfoVoList = tagInfoList.stream()
+                .map(tagInfo -> {
+                    AtpTagInfoVo tagInfoVo = new AtpTagInfoVo();
+                    BeanUtils.copyProperties(tagInfo, tagInfoVo);
+                    return tagInfoVo;
+                })
+                .collect(Collectors.toList());
+
+        return tagInfoVoList;
     }
 }

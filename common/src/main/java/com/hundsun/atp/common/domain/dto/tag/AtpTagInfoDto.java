@@ -40,9 +40,6 @@ public class AtpTagInfoDto implements Serializable {
     @ApiModelProperty("标签value值")
     private String tagValue;
 
-    @ApiModelProperty("是否可用")
-    private Integer enabled;
-
     @ApiModelProperty("空间id")
     private String projectId;
 }

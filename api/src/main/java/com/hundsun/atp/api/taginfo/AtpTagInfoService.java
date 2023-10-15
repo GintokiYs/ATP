@@ -3,6 +3,7 @@ package com.hundsun.atp.api.taginfo;
 import com.github.pagehelper.PageInfo;
 import com.hundsun.atp.common.domain.dto.folder.AtpCommonFolderDto;
 import com.hundsun.atp.common.domain.dto.tag.AtpTagInfoDto;
+import com.hundsun.atp.common.domain.dto.tag.AtpTagInfoQueryDto;
 import com.hundsun.atp.common.domain.dto.usecase.AbstractUsecaseDto;
 import com.hundsun.atp.common.domain.dto.usecase.DeleteUsecaseDto;
 import com.hundsun.atp.common.domain.dto.usecase.QueryUsecaseDto;
@@ -24,7 +25,9 @@ public interface AtpTagInfoService {
     RpcResultDTO<Boolean> deleteTagInfo(AtpTagInfoDto tagInfoDto);
 
     //标签查询
-    RpcResultDTO<List<AtpTagInfoVo>> queryTagInfo();
+    RpcResultDTO<List<AtpTagInfoVo>> queryTagInfo(AtpTagInfoQueryDto atpTagInfoQueryDto);
 
     RpcResultDTO<List<AtpTagInfoVo>> queryFolderTags(AtpCommonFolderDto atpCommonFolderDto);
+
+    RpcResultDTO<List<AtpTagInfoVo>> queryTagInfoAll();
 }
