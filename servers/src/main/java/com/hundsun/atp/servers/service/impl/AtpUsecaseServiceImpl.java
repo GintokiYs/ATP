@@ -77,7 +77,10 @@ public class AtpUsecaseServiceImpl implements AtpUsecaseService {
             boolean result = abstractUseCaseBusiness.saveBatch(atpUseCases);
             // 标签关系添加
             List<AtpTagInfoDto> tags = usecase.getTags();
-            // 根据标签和atpUseCases ,对标签明细表和中间关联表插入数据
+            // 根据标签和atpUseCases ,更新中间关联表信息
+            for (AtpUseCase atpUseCase : atpUseCases) {
+                editUsecaseTags(tags, atpUseCase.getCaseId(), atpUseCase.getFolderId());
+            }
 
             if (result) {
                 return RpcResultUtils.suc(true);
@@ -138,12 +141,13 @@ public class AtpUsecaseServiceImpl implements AtpUsecaseService {
                 atpUseCaseStatistics.setSuccessRate(100 * sucInstanceCount / totalInstanceCount);
                 atpUseCaseStatistics.setFailCount(failInstanceCount);
                 atpUseCaseStatistics.setFailRate(100 * failInstanceCount / totalInstanceCount);
+                List<AtpTagInfoVo> tagList = queryUsecaseTags(caseId);
+                atpUseCaseStatistics.setTags(tagList);
                 result.add(atpUseCaseStatistics);
             }
         }
         PageInfo<AtpUseCaseStatistics> atpUseCaseStatisticsPageInfo = new PageInfo<>(result);
 
-        // 组装标签
         return RpcResultUtils.suc(atpUseCaseStatisticsPageInfo);
     }
 
@@ -162,6 +166,9 @@ public class AtpUsecaseServiceImpl implements AtpUsecaseService {
 
             // 数据库更新用例记录
             AtpUseCase atpUseCase = abstractUseCaseBusinessImpl.generateUpdateRecord(usecaseDto);
+
+            // 根据标签和atpUseCase ,更新中间关联表信息
+            editUsecaseTags(usecaseDto.getTags(), atpUseCase.getCaseId(), atpUseCase.getFolderId());
 
             if (abstractUseCaseBusinessImpl.updateById(atpUseCase)) {
                 return RpcResultUtils.suc(true);
@@ -202,26 +209,18 @@ public class AtpUsecaseServiceImpl implements AtpUsecaseService {
         }
     }
 
-    @Override
-    public RpcResultDTO<Boolean> createUseCase(AbstractUsecaseDto usecase) {
-        return null;
-    }
-
     //用例编辑标签
     @Override
-    public RpcResultDTO<Boolean> editUsecaseTags(InterfaceUsecaseDto interfaceUsecaseDto) {
+    public RpcResultDTO<Boolean> editUsecaseTags(List<AtpTagInfoDto> atpTagInfoDtoList, String caseId, String folderId) {
         try {
             //校验所选的tag是否有重复（可能它又新增了一个与之前一模一样的tag，然后框选了两个一样的）
-            List<AtpTagInfoDto> atpTagInfoDtoList = interfaceUsecaseDto.getTags();
             //如果有重复就抛异常
             Precondition.checkArgument(!atpTagInfoBusiness.hasDuplicateTagKey(atpTagInfoDtoList), "200000001");
             //再根据caseId去关联表里把对应的tagcase匹配记录删除掉，要先删，再插入
-            String caseId = interfaceUsecaseDto.getCaseId();
             atpRefTagUseCaseBusiness.deleteByCaseId(caseId);
             //再对atp_tag_info这个表里进行insert，如果能找到对应的tagKey就不做操作，找不到就新增
 //            atpTagInfoBusiness.processAtpTagInfoList(atpTagInfoDtoList);
             //再对atp_ref_tag_use_case表进行插入操作，使得use_case_instance与tag_info关联起来
-            String folderId = interfaceUsecaseDto.getFolderId();
             for (AtpTagInfoDto dto : atpTagInfoDtoList) {
 //                AtpTagInfo atpTagInfo = atpTagInfoBusiness.queryByTagKey(dto.getTagKey());
                 String tagId = dto.getTagId();
@@ -242,11 +241,8 @@ public class AtpUsecaseServiceImpl implements AtpUsecaseService {
     }
 
     //用例查询标签集合
-    @Override
-    public RpcResultDTO<List<AtpTagInfoVo>> queryUsecaseTags(InterfaceUsecaseDto interfaceUsecaseDto) {
+    public List<AtpTagInfoVo> queryUsecaseTags(String caseId) {
         try {
-            //拿到这个用例的case_id
-            String caseId = interfaceUsecaseDto.getCaseId();
             //再用这个case_id去查ref_tag_use_case表
             List<AtpRefTagUseCase> atpRefTagUseCases = atpRefTagUseCaseBusiness.queryByCaseId(caseId);
             //接着依次取出tag_id，存到一个List中
@@ -263,9 +259,10 @@ public class AtpUsecaseServiceImpl implements AtpUsecaseService {
                 BeanUtils.copyProperties(atpTagInfo, atpTagInfoVo);
                 atpTagInfoVos.add(atpTagInfoVo);
             }
-            return RpcResultUtils.suc(atpTagInfoVos);
+            return atpTagInfoVos;
         } catch (Exception e) {
-            return RpcResultUtils.error("200000003", "查询用例标签失败" + e.getMessage());
+            log.error("error message is: ", e);
+            return new ArrayList<>();
         }
     }
 

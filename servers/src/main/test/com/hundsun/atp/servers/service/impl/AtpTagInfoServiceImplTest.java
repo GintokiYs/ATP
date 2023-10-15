@@ -112,14 +112,14 @@ public class AtpTagInfoServiceImplTest {
         atpTagInfoDtos.add(atpTagInfoDto2);
         atpTagInfoDtos.add(atpTagInfoDto3);
         interfaceUsecaseDto.setTags(atpTagInfoDtos);
-        atpUsecaseService.editUsecaseTags(interfaceUsecaseDto);
+        atpUsecaseService.editUsecaseTags(interfaceUsecaseDto.getTags(),interfaceUsecaseDto.getCaseId(),interfaceUsecaseDto.getFolderId());
 
         // 再去选择一次标签，这次不选择2、3，选择3、4
         ArrayList<AtpTagInfoDto> atpTagInfoDtos1 = new ArrayList<>();
         atpTagInfoDtos1.add(atpTagInfoDto3);
         atpTagInfoDtos1.add(atpTagInfoDto4);
         interfaceUsecaseDto.setTags(atpTagInfoDtos1);
-        atpUsecaseService.editUsecaseTags(interfaceUsecaseDto);
+        atpUsecaseService.editUsecaseTags(interfaceUsecaseDto.getTags(),interfaceUsecaseDto.getCaseId(),interfaceUsecaseDto.getFolderId());
 
         atpTagInfoService.deleteTagInfo(atpTagInfoDto3);
     }

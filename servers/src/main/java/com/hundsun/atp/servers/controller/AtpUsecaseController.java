@@ -75,22 +75,19 @@ public class AtpUsecaseController {
     public RpcResultDTO<Boolean> delete(@Validated @RequestBody DeleteUsecaseDto deleteUsecaseDto) {
         return atpUsecaseService.delete(deleteUsecaseDto);
     }
-    //用例打标签（在用例上新增标签，再选中，相当于把选中的标签的List传给AtpUseCaseDto）
+    // 用例打标签（在用例上新增标签，再选中，相当于把选中的标签的List传给AtpUseCaseDto）
     @PostMapping("/edittags")
     @ApiOperation("用例实例上新增标签")
-    public RpcResultDTO<Boolean> editUsecaseTags(@Validated @RequestBody InterfaceUsecaseDto interfaceUsecaseDto){
-        return atpUsecaseService.editUsecaseTags(interfaceUsecaseDto);
+    public RpcResultDTO<Boolean> editUsecaseTags(@Validated @RequestBody AbstractUsecaseDto abstractUsecaseDto){
+        List<AtpTagInfoDto> atpTagInfoDtoList = abstractUsecaseDto.getTags();
+        String caseId = abstractUsecaseDto.getCaseId();
+        String folderId = abstractUsecaseDto.getFolderId();
+        // todo 后面把folderId的关联关系去掉
+        return atpUsecaseService.editUsecaseTags(atpTagInfoDtoList,caseId,folderId);
 
     }
 
-    //用例查询标签集合
-    @PostMapping("/querycasetags")
-    @ApiOperation("用例查询标签集")
-    public RpcResultDTO<List<AtpTagInfoVo>> queryUsecaseTags(@Validated @RequestBody InterfaceUsecaseDto interfaceUsecaseDto){
-        return atpUsecaseService.queryUsecaseTags(interfaceUsecaseDto);
-    }
-
-    //用例查询用例集的标签集合
+    // 用例查询用例集的标签集合
     @PostMapping("/queryfoldertags")
     @ApiOperation("用例查询用例集的标签集")
     public RpcResultDTO<List<AtpTagInfoVo>> queryFolderTags(@Validated @RequestBody AtpCommonFolderDto atpCommonFolderDto){

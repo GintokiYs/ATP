@@ -1,5 +1,7 @@
 package com.hundsun.atp.common.domain.entity.usecase;
 
+import com.hundsun.atp.common.domain.dto.tag.AtpTagInfoDto;
+import com.hundsun.atp.common.domain.vo.taginfo.AtpTagInfoVo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -11,6 +13,8 @@ import lombok.experimental.SuperBuilder;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -49,7 +53,10 @@ public class AtpUseCaseWithInstance implements Serializable {
     private Integer caseType;
 
     @ApiModelProperty("执行配置,Map<String,String>")
-    private String executeConfig;
+    private Map<String, String> executeConfig;
+
+    @ApiModelProperty("标签集")
+    private List<AtpTagInfoVo> tags;
 
     @ApiModelProperty("是否生效(-1: 已删除, 0: 未生效, 1: 已生效)")
     private Integer enabled;

@@ -23,11 +23,7 @@ public interface AtpUsecaseService {
 
     RpcResultDTO<Boolean> delete(DeleteUsecaseDto deleteUsecaseDto);
 
-    RpcResultDTO<Boolean> createUseCase(AbstractUsecaseDto usecase);
-
-    RpcResultDTO<Boolean> editUsecaseTags(InterfaceUsecaseDto interfaceUsecaseDto);
-
-    RpcResultDTO<List<AtpTagInfoVo>> queryUsecaseTags(InterfaceUsecaseDto interfaceUsecaseDto);
+    RpcResultDTO<Boolean> editUsecaseTags(List<AtpTagInfoDto> atpTagInfoDtoList, String caseId, String folderId);
 
     RpcResultDTO<List<InterfaceUsecaseVo>> queryCasesByTags(List<AtpTagInfoDto> atpTagInfoDtos);
 }

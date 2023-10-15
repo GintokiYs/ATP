@@ -6,7 +6,7 @@ import com.hundsun.atp.persister.model.AtpUseCase;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
-@Mapper
+//@Mapper
 public interface UseCaseConvert {
     UseCaseConvert INSTANCE = Mappers.getMapper(UseCaseConvert.class);
 
