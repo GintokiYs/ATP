@@ -46,7 +46,8 @@ public class AtpCommonFolderServiceImpl implements AtpFolderService {
      * @param id
      * @return
      */
-    public RpcResultDTO<AtpCommonFolderVo> selectById(String id){
+    @Override
+    public RpcResultDTO<AtpCommonFolderVo> selectById(String id) {
         return RpcResultUtils.suc(atpCommonFolderBusiness.select(id));
     }
 
@@ -65,14 +66,14 @@ public class AtpCommonFolderServiceImpl implements AtpFolderService {
      * 删除目录(假删)
      *
      * @param id
+     * @param folderType
      * @param operatorCode
      * @return
      */
     @Override
-    public RpcResultDTO<Boolean> delete(String id, String operatorCode) {
-        return RpcResultUtils.suc(atpCommonFolderBusiness.update(atpCommonFolderBusiness.delete(id,operatorCode)));
+    public RpcResultDTO<Boolean> delete(String id, Integer folderType, String operatorCode) {
+        return RpcResultUtils.suc(atpCommonFolderBusiness.delete(id, folderType, operatorCode));
     }
-
 
 
 }

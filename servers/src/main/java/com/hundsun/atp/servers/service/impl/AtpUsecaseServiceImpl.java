@@ -1,58 +1,47 @@
 package com.hundsun.atp.servers.service.impl;
 
-import cn.hutool.core.util.IdUtil;
-import com.hundsun.atp.api.usecase.AtpUsecaseService;
-import com.hundsun.atp.common.domain.dto.tag.AtpTagInfoDto;
-import com.hundsun.atp.api.usecase.AtpUsecaseService;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.DateUtil;
-import com.alibaba.fastjson.JSON;
+import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-//import com.hundsun.atp.api.AtpUsecaseService;
+import com.hundsun.atp.api.usecase.AtpUsecaseService;
+import com.hundsun.atp.common.domain.dto.tag.AtpTagInfoDto;
 import com.hundsun.atp.common.domain.dto.usecase.AbstractUsecaseDto;
 import com.hundsun.atp.common.domain.dto.usecase.DeleteUsecaseDto;
+import com.hundsun.atp.common.domain.dto.usecase.InterfaceUsecaseDto;
 import com.hundsun.atp.common.domain.dto.usecase.QueryUsecaseDto;
 import com.hundsun.atp.common.domain.entity.RpcResultDTO;
 import com.hundsun.atp.common.domain.entity.usecase.AtpUseCaseStatistics;
-import com.hundsun.atp.common.domain.entity.usecase.AtpUseCaseWithInstance;
+import com.hundsun.atp.common.domain.vo.taginfo.AtpTagInfoVo;
+import com.hundsun.atp.common.domain.vo.usecase.InterfaceUsecaseVo;
 import com.hundsun.atp.common.enums.EnableEnum;
 import com.hundsun.atp.common.enums.ExecuteStatusEnum;
 import com.hundsun.atp.common.enums.UseCaseTypeEnum;
 import com.hundsun.atp.common.util.Precondition;
 import com.hundsun.atp.common.util.RpcResultUtils;
 import com.hundsun.atp.persister.mapper.AtpUseCaseMapper;
-import com.hundsun.atp.common.domain.dto.usecase.InterfaceUsecaseDto;
-import com.hundsun.atp.common.domain.vo.taginfo.AtpTagInfoVo;
-import com.hundsun.atp.common.domain.vo.usecase.InterfaceUsecaseVo;
-import com.hundsun.atp.common.util.Precondition;
 import com.hundsun.atp.persister.model.AtpRefTagUseCase;
 import com.hundsun.atp.persister.model.AtpTagInfo;
 import com.hundsun.atp.persister.model.AtpUseCase;
-import com.hundsun.atp.servers.service.business.AtpRefTagUseCaseBusiness;
-import com.hundsun.atp.servers.service.business.AtpTagInfoBusiness;
-import com.hundsun.atp.servers.service.business.AtpUseCaseBusiness;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.BeansException;
-
 import com.hundsun.atp.persister.model.AtpUseCaseInstance;
-import com.hundsun.atp.servers.service.business.AbstractUseCaseBusiness;
-import com.hundsun.atp.servers.service.business.AtpUseCaseInstanceBusiness;
+import com.hundsun.atp.servers.service.business.*;
 import com.hundsun.atp.servers.service.business.factory.UseCaseBusinessFactory;
 import com.hundsun.atp.servers.service.convert.UseCaseConvert;
-import io.swagger.annotations.ExampleProperty;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
+
+//import com.hundsun.atp.api.AtpUsecaseService;
 
 @Service
 @Slf4j
@@ -62,9 +51,6 @@ public class AtpUsecaseServiceImpl implements AtpUsecaseService {
 
     @Autowired
     private AbstractUseCaseBusiness abstractUseCaseBusiness;
-
-    @Autowired
-    private AtpUseCaseBusiness atpUseCaseBusiness;
 
     @Autowired
     private AtpTagInfoBusiness atpTagInfoBusiness;
@@ -82,18 +68,25 @@ public class AtpUsecaseServiceImpl implements AtpUsecaseService {
     @Override
     public RpcResultDTO<Boolean> create(AbstractUsecaseDto usecase) {
         try {
-            // 校验
-
+            // 检查要更新的用例名称是否存在
+            checkDuplicateUseCase(usecase);
             // 根据type类型获取不同的business
             UseCaseTypeEnum useCaseTypeEnum = UseCaseTypeEnum.getByCode(usecase.getCaseType());
             AbstractUseCaseBusiness abstractUseCaseBusiness = useCaseBusinessFactory.buildBusiness(useCaseTypeEnum);
             List<AtpUseCase> atpUseCases = abstractUseCaseBusiness.generateInsertRecord(usecase);
-            boolean b = abstractUseCaseBusiness.saveBatch(atpUseCases);
+            boolean result = abstractUseCaseBusiness.saveBatch(atpUseCases);
             // 标签关系添加
-            return RpcResultUtils.suc(true);
+            List<AtpTagInfoDto> tags = usecase.getTags();
+            // 根据标签和atpUseCases ,对标签明细表和中间关联表插入数据
+
+            if (result) {
+                return RpcResultUtils.suc(true);
+            } else {
+                return RpcResultUtils.error("00000000", "新增数据库记录报错");
+            }
         } catch (Exception e) {
-            log.error("createUseCase fail , error message is :", e);
-            return RpcResultUtils.suc(false);
+            log.error("create useCase fail , error message is :", e);
+            return RpcResultUtils.error("00000000", "新增用例失败");
         }
     }
 
@@ -160,11 +153,7 @@ public class AtpUsecaseServiceImpl implements AtpUsecaseService {
             UseCaseTypeEnum useCaseTypeEnum = UseCaseTypeEnum.getByCode(usecaseDto.getCaseType());
             AbstractUseCaseBusiness abstractUseCaseBusinessImpl = useCaseBusinessFactory.buildBusiness(useCaseTypeEnum);
             // 检查要更新的用例名称是否存在
-            String name = usecaseDto.getName();
-            QueryWrapper<AtpUseCase> duplicQueryWrapper = new QueryWrapper<>();
-            duplicQueryWrapper.eq("name", name).eq("folder_id", usecaseDto.getFolderId()).eq("enabled", EnableEnum.VALID.getCode());
-            long dulpCount = abstractUseCaseBusinessImpl.count(duplicQueryWrapper);
-            Precondition.checkIndexGreaterZero(Convert.toInt(dulpCount), "00000000", "用例集中已存在相同的用例名称");
+            checkDuplicateUseCase(usecaseDto);
             // 检查用例是否存在
             QueryWrapper<AtpUseCase> queryUseCaseWrapper = new QueryWrapper<>();
             queryUseCaseWrapper.eq("id", usecaseDto.getId()).eq("enabled", EnableEnum.VALID.getCode());
@@ -183,6 +172,14 @@ public class AtpUsecaseServiceImpl implements AtpUsecaseService {
             log.error("update usecase fail,error message is: ", e);
             return RpcResultUtils.error("00000000", "更新用例失败");
         }
+    }
+
+    private void checkDuplicateUseCase(AbstractUsecaseDto usecaseDto) {
+        String name = usecaseDto.getName();
+        QueryWrapper<AtpUseCase> duplicQueryWrapper = new QueryWrapper<>();
+        duplicQueryWrapper.eq("name", name).eq("folder_id", usecaseDto.getFolderId()).eq("enabled", EnableEnum.VALID.getCode());
+        long dulpCount = abstractUseCaseBusiness.count(duplicQueryWrapper);
+        Precondition.checkIndexGreaterZero(Convert.toInt(dulpCount), "00000000", "用例集中已存在相同的用例名称");
     }
 
     @Override
@@ -287,7 +284,7 @@ public class AtpUsecaseServiceImpl implements AtpUsecaseService {
                 caseIds.add(atpRefTagUseCase.getCaseId());
             }
             //接着去根据caseIds列表去atp_use_case表里去查数据
-            List<AtpUseCase> atpUseCases = atpUseCaseBusiness.queryByCaseIds(caseIds);
+            List<AtpUseCase> atpUseCases = abstractUseCaseBusiness.queryByCaseIds(caseIds);
             ArrayList<InterfaceUsecaseVo> interfaceUsecaseVos = new ArrayList<>();
             for (AtpUseCase atpUseCase : atpUseCases) {
                 InterfaceUsecaseVo interfaceUsecaseVo = new InterfaceUsecaseVo();

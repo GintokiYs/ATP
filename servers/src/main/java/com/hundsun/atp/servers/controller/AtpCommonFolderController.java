@@ -78,25 +78,27 @@ public class AtpCommonFolderController {
     /**
      * 删除目录(假删)
      *
-     * @param id
-     * @param operatorCode
+     * @param atpCommonFolderDto
      * @return
      */
     @PostMapping("/delete")
     @ApiOperation("删除目录")
-    RpcResultDTO<Boolean> delete(@RequestParam String id, @RequestParam String operatorCode) {
-        return atpFolderService.delete(id, operatorCode);
+    RpcResultDTO<Boolean> delete(@Validated @RequestBody AtpCommonFolderDto atpCommonFolderDto) {
+        String id = atpCommonFolderDto.getId();
+        String operatorCode = atpCommonFolderDto.getOperatorCode();
+        Integer folderType = atpCommonFolderDto.getFolderType();
+        return atpFolderService.delete(id, folderType, operatorCode);
     }
 
     /**
      * 目录详情展示
      *
-     * @param id
+     * @param atpCommonFolderDto
      * @return
      */
     @PostMapping("/select")
     @ApiOperation("目录详情展示")
-    RpcResultDTO<AtpCommonFolderVo> select(@RequestParam String id) {
-        return atpFolderService.selectById(id);
+    RpcResultDTO<AtpCommonFolderVo> select(@Validated @RequestBody AtpCommonFolderDto atpCommonFolderDto) {
+        return atpFolderService.selectById(atpCommonFolderDto.getId());
     }
 }

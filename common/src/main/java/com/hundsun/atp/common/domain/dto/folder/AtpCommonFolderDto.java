@@ -48,23 +48,8 @@ public class AtpCommonFolderDto extends AtpBaseDto {
     @ApiModelProperty("前端utree展示用")
     private String utreeid;
 
-    @ApiModelProperty("是否生效(-1: 已删除, 0: 未生效, 1: 已生效)")
-    private Integer enabled;
-
     @ApiModelProperty("执行配置,Map<String,String>")
     private Map<String, String> executeConfig;
-
-    @ApiModelProperty("创建者")
-    private String createUser;
-
-    @ApiModelProperty("创建时间")
-    private Date createTime;
-
-    @ApiModelProperty("修改者")
-    private String updateUser;
-
-    @ApiModelProperty("更新时间")
-    private Date updateTime;
 
     @ApiModelProperty("备注")
     private String remark;

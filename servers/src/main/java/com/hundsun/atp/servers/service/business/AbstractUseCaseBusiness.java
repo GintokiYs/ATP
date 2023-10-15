@@ -7,9 +7,11 @@ import com.hundsun.atp.persister.mapper.AtpUseCaseMapper;
 import com.hundsun.atp.persister.model.AtpUseCase;
 import com.hundsun.atp.servers.service.business.caserun.ICaseRun;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,6 +34,9 @@ import java.util.List;
 @Service
 public abstract class AbstractUseCaseBusiness<IN, OUT, T extends ICaseRun<IN, OUT>> extends ServiceImpl<AtpUseCaseMapper, AtpUseCase> {
 
+    @Autowired
+    private AtpUseCaseMapper atpUseCaseMapper;
+
     private T iCaseRun;
 
     public abstract UseCaseTypeEnum getUseCaseTypeEnum();
@@ -39,20 +44,24 @@ public abstract class AbstractUseCaseBusiness<IN, OUT, T extends ICaseRun<IN, OU
     public abstract List<AtpUseCase> generateInsertRecord(AbstractUsecaseDto usecase) throws Exception;
 
     public abstract AtpUseCase generateUpdateRecord(AbstractUsecaseDto usecaseDto);
-    public abstract List<AtpUseCase> generateInsertRecord(AbstractUsecaseDto usecase) throws Exception ;
 
     /**
      * 执行测试用例并获取执行结果
+     *
      * @param atpUseCase 测试用例信息
-
      * @return OUT
      */
     public OUT testCase(IN atpUseCase) throws IOException {
         return iCaseRun.excuteHttpPostCase(atpUseCase);
-    };
+    }
 
-    public List<AtpUseCase> queryUserCaseByCaseIdList(List<Long> caseIdList){
+    public List<AtpUseCase> queryUserCaseByCaseIdList(List<Long> caseIdList) {
         // 获取当前空间下所有的Folder
         return this.baseMapper.queryUseCaseInfoList(caseIdList);
+    }
+
+    public List<AtpUseCase> queryByCaseIds(ArrayList<String> caseIds) {
+        List<AtpUseCase> atpUseCases = atpUseCaseMapper.selectByCaseIds(caseIds);
+        return atpUseCases;
     }
 }

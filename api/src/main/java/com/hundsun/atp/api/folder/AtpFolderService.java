@@ -30,7 +30,7 @@ public interface AtpFolderService {
 
     RpcResultDTO<Boolean> update(AtpCommonFolderDto atpCommonFolderDto);
 
-    RpcResultDTO<Boolean> delete(String id, String operatorCode);
+    RpcResultDTO<Boolean> delete(String id, Integer folderType, String operatorCode);
 
     RpcResultDTO<AtpCommonFolderVo> selectById(String id);
 

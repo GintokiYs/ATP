@@ -1,8 +1,10 @@
 package com.hundsun.atp.servers.service.business;
 
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.IdUtil;
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -13,8 +15,11 @@ import com.hundsun.atp.common.enums.EnableEnum;
 import com.hundsun.atp.common.enums.FolderTypeEnum;
 import com.hundsun.atp.common.util.Precondition;
 import com.hundsun.atp.persister.mapper.AtpCommonFolderMapper;
+import com.hundsun.atp.persister.mapper.AtpUseCaseMapper;
 import com.hundsun.atp.persister.model.AtpCommonFolder;
+import com.hundsun.atp.persister.model.AtpUseCase;
 import com.hundsun.atp.servers.service.convert.CommonFolderConvert;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.beans.BeanMap;
 import org.springframework.stereotype.Service;
@@ -37,6 +42,9 @@ public class AtpCommonFolderBusiness extends ServiceImpl<AtpCommonFolderMapper, 
     private AtpCommonFolderMapper atpCommonFolderMapper;
 
     @Autowired
+    private AtpUseCaseMapper atpUseCaseMapper;
+
+    @Autowired
     private CommonFolderConvert commonFolderConvert;
 
     public AtpCommonFolderVo create(AtpCommonFolderDto folderDto) {
@@ -44,9 +52,6 @@ public class AtpCommonFolderBusiness extends ServiceImpl<AtpCommonFolderMapper, 
         FolderTypeEnum folderTypeEnum = FolderTypeEnum.getByCode(folderDto.getFolderType());
         Precondition.checkArgument(!validateFolderName(folderDto.getFolderName(), folderDto.getProjectId(), folderTypeEnum), "10000013");
 
-
-        folderDto.setCreateUser(folderDto.getOperatorCode());
-        folderDto.setUpdateUser(folderDto.getOperatorCode());
         String parentId = folderDto.getParentId();
         QueryWrapper<AtpCommonFolder> parentFolderQueryWrapper = new QueryWrapper<>();
         HashMap<String, Object> parentFolderQueryMap = MapUtil.newHashMap();
@@ -80,9 +85,8 @@ public class AtpCommonFolderBusiness extends ServiceImpl<AtpCommonFolderMapper, 
     }
 
     public AtpCommonFolderVo insert(AtpCommonFolderDto folderDto) {
-        folderDto.setCreateUser(folderDto.getOperatorCode());
         AtpCommonFolder atpCommonFolder = commonFolderConvert.toModel(folderDto);
-        AtpCommonFolderVo atpCommonFolderVo = commonFolderConvert.toVo(atpCommonFolder);
+
         String parentId = folderDto.getParentId();
         String folderName = folderDto.getFolderName();
 
@@ -96,27 +100,43 @@ public class AtpCommonFolderBusiness extends ServiceImpl<AtpCommonFolderMapper, 
         atpCommonFolder.setId(IdUtil.simpleUUID());
         atpCommonFolder.setUtreeid(IdUtil.simpleUUID());
         atpCommonFolder.setProjectId(folderDto.getProjectId());
-
+        atpCommonFolder.setCreateUser(folderDto.getOperatorCode());
         atpCommonFolder.setCreateTime(new Date());
+        atpCommonFolder.setUpdateUser(folderDto.getOperatorCode());
         atpCommonFolder.setUpdateTime(new Date());
-        atpCommonFolder.setUpdateUser(atpCommonFolder.getCreateUser());
 
         // 插入数据
         atpCommonFolderMapper.insert(atpCommonFolder);
-        atpCommonFolderVo.setId(atpCommonFolder.getId());
-        atpCommonFolderVo.setUtreeid(atpCommonFolder.getUtreeid());
-        atpCommonFolderVo.setCreateTime(atpCommonFolder.getCreateTime());
+        AtpCommonFolderVo atpCommonFolderVo = commonFolderConvert.toVo(atpCommonFolder);
+
         return atpCommonFolderVo;
     }
 
-    public AtpCommonFolderDto delete(String id, String operatorCode) {
-        AtpCommonFolderDto atpCommonFolderDto = new AtpCommonFolderDto();
-        atpCommonFolderDto.setId(id);
-        atpCommonFolderDto.setUpdateUser(operatorCode);
-        atpCommonFolderDto.setEnabled(EnableEnum.DELETE.getCode());
-        atpCommonFolderDto.setUpdateTime(new Date());
+    public Boolean delete(String id, Integer folderType, String operatorCode) {
+        try {
+            // 检查该目录下是否还有子文件夹
+            FolderTypeEnum folderTypeEnum = FolderTypeEnum.getByCode(folderType);
+            if (folderTypeEnum.equals(FolderTypeEnum.USECASE)) {
+                QueryWrapper<AtpUseCase> queryWrapper = new QueryWrapper<>();
+                queryWrapper.eq("folder_id", id).eq("enabled", EnableEnum.VALID.getCode());
+                Long count = atpUseCaseMapper.selectCount(queryWrapper);
+                Precondition.checkIndexGreaterZero(Convert.toInt(count), "000000", "检测到用例集下还有测试用例存在，请先删除测试用例");
+            } else {
+                QueryWrapper<AtpCommonFolder> queryWrapper = new QueryWrapper<>();
+                queryWrapper.eq("folder_id", id).eq("enabled", EnableEnum.VALID.getCode());
+                Long count = atpCommonFolderMapper.selectCount(queryWrapper);
+                Precondition.checkIndexGreaterZero(Convert.toInt(count), "000000", "检测到还有子文件夹存在，请先删除子文件夹");
+            }
+            // 进行删除操作（假删）
+            AtpCommonFolder deleteAtpCommonFolder = AtpCommonFolder.builder().id(id).enabled(EnableEnum.DELETE.getCode()).updateUser(operatorCode).updateTime(DateUtil.date()).build();
+            atpCommonFolderMapper.updateById(deleteAtpCommonFolder);
+            return true;
+        } catch (Exception e) {
+            log.error("delete folder fail,error message is:");
+            return false;
+        }
 
-        return atpCommonFolderDto;
+
 //        //获取删除文件夹的子文件夹
 //        AtpCommonFolder parentFolder = atpCommonFolderMapper.selectById(id);
 //        atpCommonFolderMapper.selectById(id).setEnabled(EnableEnum.DELETE.getCode());
@@ -138,6 +158,7 @@ public class AtpCommonFolderBusiness extends ServiceImpl<AtpCommonFolderMapper, 
 //        }
 //        return true;
     }
+
     /**
      * 判断是否存在同名文件夹
      *
@@ -173,48 +194,33 @@ public class AtpCommonFolderBusiness extends ServiceImpl<AtpCommonFolderMapper, 
         return commonFolderConvert.toVoList(atpCommonFolders);
     }
 
-    public AtpCommonFolderVo select(String id){
+    public AtpCommonFolderVo select(String id) {
         AtpCommonFolder atpCommonFolder = atpCommonFolderMapper.selectById(id);
-        if(atpCommonFolder.getEnabled()==1) {
+        if (EnableEnum.VALID.getCode().equals(atpCommonFolder.getEnabled())) {
             AtpCommonFolderVo atpCommonFolderVo = commonFolderConvert.toVo(atpCommonFolder);
-            atpCommonFolderVo.setExecuteConfig(mapStringToMap(atpCommonFolder.getExecuteConfig()));
+            atpCommonFolderVo.setExecuteConfig(JSON.parseObject(atpCommonFolder.getExecuteConfig(), new HashMap<String, String>().getClass()));
             return atpCommonFolderVo;
         }
         return null;
     }
 
-    public static Map<String,String> mapStringToMap(String str){
-        str = str.substring(1, str.length()-1);
-        String[] strs = str.split(",");
-        Map<String,String> map = new HashMap<String, String>();
-        for (String string : strs) {
-            String key = string.split("=")[0];
-            String value = string.split("=")[1];
-            // 去掉头部空格
-            String key1 = key.trim();
-            String value1 = value.trim();
-            map.put(key1, value1);
-        }
-        return map;
-    }
-
-    public static List<String> getAllChildrenIds(String id, List<AtpCommonFolderVo> folderVos) {
-        List<String> childrenIds = new ArrayList<>();
-        for (AtpCommonFolderVo folderVo : folderVos) {
-            if (folderVo.getParentId() != null && folderVo.getParentId() ==id && folderVo.getProjectId()!=null) {
-                childrenIds.add(folderVo.getId());
-                childrenIds.addAll(getAllChildrenIds(folderVo.getId(), folderVos));
-            }
-        }
-        return childrenIds;
-    }
+//    public static List<String> getAllChildrenIds(String id, List<AtpCommonFolderVo> folderVos) {
+//        List<String> childrenIds = new ArrayList<>();
+//        for (AtpCommonFolderVo folderVo : folderVos) {
+//            if (folderVo.getParentId() != null && folderVo.getParentId() == id && folderVo.getProjectId() != null) {
+//                childrenIds.add(folderVo.getId());
+//                childrenIds.addAll(getAllChildrenIds(folderVo.getId(), folderVos));
+//            }
+//        }
+//        return childrenIds;
+//    }
 
     public Boolean update(AtpCommonFolderDto atpCommonFolderDto) {
         // 校验要更新目录的名称是否合规（重名---可以调用validateFolderName方法）
         AtpCommonFolder sourceCommonFolder = atpCommonFolderMapper.selectById(atpCommonFolderDto.getId());
         BeanMap sourceFolderMap = BeanMap.create(sourceCommonFolder);
 
-        if(atpCommonFolderDto.getFolderType()==null || atpCommonFolderDto.getFolderType() == 0 && Integer.valueOf(sourceFolderMap.get("folderType").toString())!= 0){
+        if (atpCommonFolderDto.getFolderType() == null || atpCommonFolderDto.getFolderType() == 0 && Integer.valueOf(sourceFolderMap.get("folderType").toString()) != 0) {
             atpCommonFolderDto.setFolderType(commonFolderConvert.toVo(sourceCommonFolder).getFolderType());
         }
         FolderTypeEnum folderTypeEnum = FolderTypeEnum.getByCode(atpCommonFolderDto.getFolderType());
@@ -224,31 +230,31 @@ public class AtpCommonFolderBusiness extends ServiceImpl<AtpCommonFolderMapper, 
         AtpCommonFolder atpCommonFolder = commonFolderConvert.toModel(atpCommonFolderDto);
         AtpCommonFolder targetCommonFolder = new AtpCommonFolder();
         BeanMap atpFolderMap = BeanMap.create(atpCommonFolder);
-        HashMap<String,Object> targetFolderMap = new HashMap<String,Object>();
+        HashMap<String, Object> targetFolderMap = new HashMap<String, Object>();
         targetFolderMap.putAll(atpFolderMap);
 
         //替换无需更新的字段
-        for (String key : targetFolderMap.keySet()){
-            if(sourceFolderMap.get(key) != null && targetFolderMap.get(key) ==null){
+        for (String key : targetFolderMap.keySet()) {
+            if (sourceFolderMap.get(key) != null && targetFolderMap.get(key) == null) {
                 Object value = sourceFolderMap.get(key);
-                targetFolderMap.put(key,value);
+                targetFolderMap.put(key, value);
             }
         }
         try {
-            targetCommonFolder = mapToBean(targetFolderMap,AtpCommonFolder.class);
+            targetCommonFolder = mapToBean(targetFolderMap, AtpCommonFolder.class);
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
         targetCommonFolder.setUpdateTime(new Date());
-        if(targetCommonFolder.getUpdateUser()==null) {
+        if (targetCommonFolder.getUpdateUser() == null) {
             targetCommonFolder.setUpdateUser(atpCommonFolder.getCreateUser());
         }
         UpdateWrapper<AtpCommonFolder> folderUpdateWrapper = new UpdateWrapper<>();
         HashMap<String, Object> folderUpdateMap = MapUtil.newHashMap();
 
         folderUpdateMap.put("id", targetCommonFolder.getId());
-        atpCommonFolderMapper.update(targetCommonFolder,folderUpdateWrapper.allEq(folderUpdateMap));
+        atpCommonFolderMapper.update(targetCommonFolder, folderUpdateWrapper.allEq(folderUpdateMap));
         return true;
     }
 
