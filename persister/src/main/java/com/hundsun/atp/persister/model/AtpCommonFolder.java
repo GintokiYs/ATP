@@ -6,9 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
 
@@ -30,6 +28,8 @@ import java.util.Date;
 @ApiModel(value = "AtpCommonFolder对象", description = "通用文件夹")
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 public class AtpCommonFolder implements Serializable {
 
     private static final long serialVersionUID = 1L;

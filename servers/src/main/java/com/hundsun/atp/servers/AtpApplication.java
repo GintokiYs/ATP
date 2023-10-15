@@ -3,6 +3,7 @@ package com.hundsun.atp.servers;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import springfox.documentation.oas.annotations.EnableOpenApi;
 
 
@@ -13,6 +14,7 @@ import springfox.documentation.oas.annotations.EnableOpenApi;
 @SpringBootApplication(scanBasePackages = {"com.hundsun.atp"})
 @MapperScan("com.hundsun.atp.persister.mapper")
 @EnableOpenApi
+@EnableTransactionManagement
 public class AtpApplication {
 
     public static void main(String[] args) {

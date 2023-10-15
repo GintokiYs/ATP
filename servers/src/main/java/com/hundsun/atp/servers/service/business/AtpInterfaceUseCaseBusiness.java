@@ -2,6 +2,7 @@ package com.hundsun.atp.servers.service.business;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
+import com.hundsun.atp.servers.prompt.casecreate.PostInterfaceCaseCreate;
 import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -105,4 +106,27 @@ public class AtpInterfaceUseCaseBusiness extends AbstractUseCaseBusiness {
                 .build();
         return atpUseCase;
     }
+
+
+    public static class TestHttpPostCaseParams {
+        private AtpUseCase atpUseCase;
+        private String url;
+
+        public AtpUseCase getAtpUseCase() {
+            return atpUseCase;
+        }
+
+        public void setAtpUseCase(AtpUseCase atpUseCase) {
+            this.atpUseCase = atpUseCase;
+        }
+
+        public String getUrl() {
+            return url;
+        }
+
+        public void setUrl(String url) {
+            this.url = url;
+        }
+    }
+
 }

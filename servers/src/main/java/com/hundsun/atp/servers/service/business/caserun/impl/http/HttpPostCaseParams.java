@@ -2,7 +2,7 @@ package com.hundsun.atp.servers.service.business.caserun.impl.http;
 
 import java.util.Map;
 
-public class HttpCaseParams {
+public class HttpPostCaseParams {
 
     private String url;
     private String tCaseJson;
