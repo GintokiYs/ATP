@@ -65,6 +65,9 @@ public class AtpUsecaseServiceImpl implements AtpUsecaseService {
     @Autowired
     private AtpUseCaseInstanceBusiness atpUseCaseInstanceBusiness;
 
+    @Autowired
+    private UseCaseConvert useCaseConvert;
+
     @Override
     public RpcResultDTO<Boolean> create(AbstractUsecaseDto usecase) {
         try {
@@ -106,16 +109,19 @@ public class AtpUsecaseServiceImpl implements AtpUsecaseService {
             PageInfo<AtpUseCaseStatistics> atpUseCaseStatisticsPageInfo = new PageInfo<>(result);
             return RpcResultUtils.suc((atpUseCaseStatisticsPageInfo));
         }
-        List<String> caseIdList = list.stream().map(AtpUseCase::getCaseId).collect(Collectors.toList());
+        List<String> caseIdList = list.stream().map(AtpUseCase::getId).collect(Collectors.toList());
         QueryWrapper<AtpUseCaseInstance> queryWrapper = new QueryWrapper<>();
-        queryWrapper.in("use_case_id", caseIdList).eq("execute_status", queryUsecaseDto.getCheckResult()).orderByDesc("bussiness_time");
-        List<AtpUseCaseInstance> atpUseCaseInstances = atpUseCaseInstanceBusiness.list(queryWrapper);
+        queryWrapper.in("use_case_id", caseIdList);
+        if (queryUsecaseDto.getCheckResult() != null) {
+            queryWrapper = queryWrapper.eq("execute_status", queryUsecaseDto.getCheckResult());
+        }
+        List<AtpUseCaseInstance> atpUseCaseInstances = atpUseCaseInstanceBusiness.list(queryWrapper.orderByDesc("bussiness_time"));
         Map<String, List<AtpUseCaseInstance>> withInstanceMap = atpUseCaseInstances.stream()
                 .collect(Collectors.groupingBy(AtpUseCaseInstance::getUseCaseId));
 
         for (AtpUseCase atpUseCase : list) {
-            String caseId = atpUseCase.getCaseId();
-            List<AtpUseCaseInstance> atpUseCaseWithInstances1 = withInstanceMap.get(caseId);
+            String id = atpUseCase.getId();
+            List<AtpUseCaseInstance> atpUseCaseWithInstances1 = withInstanceMap.get(id);
             if (CollUtil.isNotEmpty(atpUseCaseWithInstances1)) {
                 int totalInstanceCount = atpUseCaseWithInstances1.size();
                 int sucInstanceCount = 0;
@@ -130,7 +136,7 @@ public class AtpUsecaseServiceImpl implements AtpUsecaseService {
                     }
                 }
                 // 填入最新business的用例实例结果
-                AtpUseCaseStatistics atpUseCaseStatistics = UseCaseConvert.INSTANCE.enhanceStatistics(atpUseCase);
+                AtpUseCaseStatistics atpUseCaseStatistics = useCaseConvert.enhanceStatistics(atpUseCase);
                 AtpUseCaseInstance lastedAtpUseCaseInstance = atpUseCaseWithInstances1.get(0);
                 atpUseCaseStatistics.setInstanceId(lastedAtpUseCaseInstance.getInstanceId());
                 atpUseCaseStatistics.setBussinessTime(lastedAtpUseCaseInstance.getBussinessTime());
@@ -141,7 +147,7 @@ public class AtpUsecaseServiceImpl implements AtpUsecaseService {
                 atpUseCaseStatistics.setSuccessRate(100 * sucInstanceCount / totalInstanceCount);
                 atpUseCaseStatistics.setFailCount(failInstanceCount);
                 atpUseCaseStatistics.setFailRate(100 * failInstanceCount / totalInstanceCount);
-                List<AtpTagInfoVo> tagList = queryUsecaseTags(caseId);
+                List<AtpTagInfoVo> tagList = queryUsecaseTags(id);
                 atpUseCaseStatistics.setTags(tagList);
                 result.add(atpUseCaseStatistics);
             }
@@ -223,7 +229,7 @@ public class AtpUsecaseServiceImpl implements AtpUsecaseService {
             //再对atp_ref_tag_use_case表进行插入操作，使得use_case_instance与tag_info关联起来
             for (AtpTagInfoDto dto : atpTagInfoDtoList) {
 //                AtpTagInfo atpTagInfo = atpTagInfoBusiness.queryByTagKey(dto.getTagKey());
-                String tagId = dto.getTagId();
+                String tagId = dto.getId();
                 String projectId = dto.getProjectId();
                 AtpRefTagUseCase atpRefTagUseCase = new AtpRefTagUseCase();
                 atpRefTagUseCase.setTagId(tagId);
