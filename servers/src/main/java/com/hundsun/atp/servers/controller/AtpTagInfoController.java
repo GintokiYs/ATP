@@ -57,7 +57,7 @@ public class AtpTagInfoController {
     }
 
     @PostMapping("/queryAll")
-    @ApiOperation("查询所有标签")
+//    @ApiOperation("查询所有标签")
     public RpcResultDTO<List<AtpTagInfoVo>> queryTagInfoAll() {
 
         return atpTagInfoService.queryTagInfoAll();

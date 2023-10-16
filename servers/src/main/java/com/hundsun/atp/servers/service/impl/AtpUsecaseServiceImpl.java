@@ -11,7 +11,6 @@ import com.hundsun.atp.api.usecase.AtpUsecaseService;
 import com.hundsun.atp.common.domain.dto.tag.AtpTagInfoDto;
 import com.hundsun.atp.common.domain.dto.usecase.AbstractUsecaseDto;
 import com.hundsun.atp.common.domain.dto.usecase.DeleteUsecaseDto;
-import com.hundsun.atp.common.domain.dto.usecase.InterfaceUsecaseDto;
 import com.hundsun.atp.common.domain.dto.usecase.QueryUsecaseDto;
 import com.hundsun.atp.common.domain.entity.RpcResultDTO;
 import com.hundsun.atp.common.domain.entity.usecase.AtpUseCaseStatistics;
@@ -27,7 +26,10 @@ import com.hundsun.atp.persister.model.AtpRefTagUseCase;
 import com.hundsun.atp.persister.model.AtpTagInfo;
 import com.hundsun.atp.persister.model.AtpUseCase;
 import com.hundsun.atp.persister.model.AtpUseCaseInstance;
-import com.hundsun.atp.servers.service.business.*;
+import com.hundsun.atp.servers.service.business.AbstractUseCaseBusiness;
+import com.hundsun.atp.servers.service.business.AtpRefTagUseCaseBusiness;
+import com.hundsun.atp.servers.service.business.AtpTagInfoBusiness;
+import com.hundsun.atp.servers.service.business.AtpUseCaseInstanceBusiness;
 import com.hundsun.atp.servers.service.business.factory.UseCaseBusinessFactory;
 import com.hundsun.atp.servers.service.convert.UseCaseConvert;
 import lombok.extern.slf4j.Slf4j;
@@ -189,10 +191,12 @@ public class AtpUsecaseServiceImpl implements AtpUsecaseService {
 
     private void checkDuplicateUseCase(AbstractUsecaseDto usecaseDto) {
         String name = usecaseDto.getName();
-        QueryWrapper<AtpUseCase> duplicQueryWrapper = new QueryWrapper<>();
-        duplicQueryWrapper.eq("name", name).eq("folder_id", usecaseDto.getFolderId()).eq("enabled", EnableEnum.VALID.getCode());
-        long dulpCount = abstractUseCaseBusiness.count(duplicQueryWrapper);
-        Precondition.checkIndexGreaterZero(Convert.toInt(dulpCount), "00000000", "用例集中已存在相同的用例名称");
+        if (name != null && usecaseDto.getFolderId() != null) {
+            QueryWrapper<AtpUseCase> duplicQueryWrapper = new QueryWrapper<>();
+            duplicQueryWrapper.eq("name", name).eq("folder_id", usecaseDto.getFolderId()).eq("enabled", EnableEnum.VALID.getCode());
+            long dulpCount = abstractUseCaseBusiness.count(duplicQueryWrapper);
+            Precondition.checkIndexGreaterZero(Convert.toInt(dulpCount), "00000000", "用例集中已存在相同的用例名称");
+        }
     }
 
     @Override

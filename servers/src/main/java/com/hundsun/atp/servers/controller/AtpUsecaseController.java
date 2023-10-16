@@ -76,29 +76,29 @@ public class AtpUsecaseController {
         return atpUsecaseService.delete(deleteUsecaseDto);
     }
     // 用例打标签（在用例上新增标签，再选中，相当于把选中的标签的List传给AtpUseCaseDto）
-    @PostMapping("/edittags")
-    @ApiOperation("用例实例上新增标签")
-    public RpcResultDTO<Boolean> editUsecaseTags(@Validated @RequestBody AbstractUsecaseDto abstractUsecaseDto){
-        List<AtpTagInfoDto> atpTagInfoDtoList = abstractUsecaseDto.getTags();
-        String caseId = abstractUsecaseDto.getCaseId();
-        String folderId = abstractUsecaseDto.getFolderId();
-        // todo 后面把folderId的关联关系去掉
-        return atpUsecaseService.editUsecaseTags(atpTagInfoDtoList,caseId,folderId);
+//    @PostMapping("/edittags")
+//    @ApiOperation("用例实例上新增标签")
+//    public RpcResultDTO<Boolean> editUsecaseTags(@Validated @RequestBody AbstractUsecaseDto abstractUsecaseDto){
+//        List<AtpTagInfoDto> atpTagInfoDtoList = abstractUsecaseDto.getTags();
+//        String caseId = abstractUsecaseDto.getCaseId();
+//        String folderId = abstractUsecaseDto.getFolderId();
+//        // todo 后面把folderId的关联关系去掉
+//        return atpUsecaseService.editUsecaseTags(atpTagInfoDtoList,caseId,folderId);
+//
+//    }
 
-    }
+//    // 用例查询用例集的标签集合
+//    @PostMapping("/queryfoldertags")
+//    @ApiOperation("用例查询用例集的标签集")
+//    public RpcResultDTO<List<AtpTagInfoVo>> queryFolderTags(@Validated @RequestBody AtpCommonFolderDto atpCommonFolderDto){
+//        return atpTagInfoService.queryFolderTags(atpCommonFolderDto);
+//    }
 
-    // 用例查询用例集的标签集合
-    @PostMapping("/queryfoldertags")
-    @ApiOperation("用例查询用例集的标签集")
-    public RpcResultDTO<List<AtpTagInfoVo>> queryFolderTags(@Validated @RequestBody AtpCommonFolderDto atpCommonFolderDto){
-        return atpTagInfoService.queryFolderTags(atpCommonFolderDto);
-    }
-
-    //根据筛选的标签展示case列表
-    @PostMapping("/querycasesbytags")
-    @ApiOperation("根据筛选的标签展示case列表")
-    public RpcResultDTO<List<InterfaceUsecaseVo>> queryCasesByTags(@Validated @RequestBody List<AtpTagInfoDto> atpTagInfoDtos){
-        return atpUsecaseService.queryCasesByTags(atpTagInfoDtos);
-    }
+//    //根据筛选的标签展示case列表
+//    @PostMapping("/querycasesbytags")
+//    @ApiOperation("根据筛选的标签展示case列表")
+//    public RpcResultDTO<List<InterfaceUsecaseVo>> queryCasesByTags(@Validated @RequestBody List<AtpTagInfoDto> atpTagInfoDtos){
+//        return atpUsecaseService.queryCasesByTags(atpTagInfoDtos);
+//    }
 
 }

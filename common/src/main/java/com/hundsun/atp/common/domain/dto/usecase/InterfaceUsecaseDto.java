@@ -32,8 +32,6 @@ import java.util.Map;
 @AllArgsConstructor
 @JsonTypeName(value = "1")
 public class InterfaceUsecaseDto extends AbstractUsecaseDto {
-
-    private String InterfaceContent;
     /**
      * 普通接口用例描述详情
      */

@@ -54,7 +54,7 @@ public class AtpUseCase implements Serializable {
     @TableField(value = "check_rule")
     private String checkRule;
 
-    @ApiModelProperty("用例类型")
+    @ApiModelProperty("用例类型, 1:接口测试用例")
     @TableField(value = "case_type")
     private Integer caseType;
 
@@ -62,7 +62,7 @@ public class AtpUseCase implements Serializable {
     @TableField(value = "execute_config")
     private String executeConfig;
 
-    @ApiModelProperty("是否生效(-1: 已删除, 0: 未生效, 1: 已生效)")
+    @ApiModelProperty("是否生效(-1: 已删除, 0: 未生效, 1: 已生效)")
     @TableField(value = "enabled")
     private Integer enabled;
 
