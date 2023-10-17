@@ -2,6 +2,7 @@ package com.hundsun.atp.servers.controller;
 
 import com.hundsun.atp.api.taginfo.AtpTagInfoService;
 import com.hundsun.atp.api.usecase.AtpUsecaseService;
+import com.hundsun.atp.common.domain.dto.folder.AtpCommonFolderDto;
 import com.hundsun.atp.common.domain.dto.tag.AtpTagInfoDto;
 import com.hundsun.atp.common.domain.dto.tag.AtpTagInfoQueryDto;
 import com.hundsun.atp.common.domain.dto.usecase.AbstractUsecaseDto;
@@ -68,6 +69,13 @@ public class AtpTagInfoController {
     public RpcResultDTO<List<AtpTagInfoVo>> queryTagInfo(@Validated @RequestBody AtpTagInfoQueryDto atpTagInfoQueryDto) {
 
         return atpTagInfoService.queryTagInfo(atpTagInfoQueryDto);
+    }
+
+    @PostMapping("/queryFolderTags")
+    @ApiOperation("查询用例集标签")
+    public RpcResultDTO<List<AtpTagInfoVo>> queryFolderTags(@Validated @RequestBody AtpCommonFolderDto atpCommonFolderDto) {
+
+        return atpTagInfoService.queryFolderTags(atpCommonFolderDto);
     }
 
 }

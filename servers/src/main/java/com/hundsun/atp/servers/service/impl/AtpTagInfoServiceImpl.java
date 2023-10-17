@@ -43,24 +43,40 @@ public class AtpTagInfoServiceImpl implements AtpTagInfoService {
 
     @Override
     public RpcResultDTO<AtpTagInfoVo> createTagInfo(AtpTagInfoDto tagInfoDto) {
-        return RpcResultUtils.suc(atpTagInfoBusiness.createTagInfo(tagInfoDto));
+        try {
+            return RpcResultUtils.suc(atpTagInfoBusiness.createTagInfo(tagInfoDto));
+        } catch (Exception e) {
+            return RpcResultUtils.error("200000006", "创建标签失败" + e.getMessage());
+        }
     }
 
     @Override
     public RpcResultDTO<Boolean> editTagInfo(AtpTagInfoDto tagInfoDto) {
-        return RpcResultUtils.suc(atpTagInfoBusiness.editTagInfo(tagInfoDto));
+        try {
+            return RpcResultUtils.suc(atpTagInfoBusiness.editTagInfo(tagInfoDto));
+        } catch (Exception e) {
+            return RpcResultUtils.error("200000002", "编辑标签失败" + e.getMessage());
+        }
     }
 
     @Override
     public RpcResultDTO<Boolean> deleteTagInfo(AtpTagInfoDto tagInfoDto) {
-        //先删除tag_info表里的数据，再删关联表数据
-        String id = tagInfoDto.getId();
-        return RpcResultUtils.suc(atpTagInfoBusiness.deleteTagAndRef(id));
+        try {
+            //先删除tag_info表里的数据，再删关联表数据
+            String id = tagInfoDto.getId();
+            return RpcResultUtils.suc(atpTagInfoBusiness.deleteTagAndRef(id));
+        } catch (Exception e) {
+            return RpcResultUtils.error("200000007", "删除标签失败" + e.getMessage());
+        }
     }
 
     @Override
     public RpcResultDTO<List<AtpTagInfoVo>> queryTagInfo(AtpTagInfoQueryDto atpTagInfoQueryDto) {
-        return RpcResultUtils.suc(atpTagInfoBusiness.queryTagInfo(atpTagInfoQueryDto.getCaseId(), atpTagInfoQueryDto.getProjectId()));
+        try {
+            return RpcResultUtils.suc(atpTagInfoBusiness.queryTagInfo(atpTagInfoQueryDto.getCaseId(), atpTagInfoQueryDto.getProjectId()));
+        } catch (Exception e) {
+            return RpcResultUtils.error("200000008", "查询标签失败" + e.getMessage());
+        }
     }
 
     //用例查询用例集标签集合
@@ -77,7 +93,7 @@ public class AtpTagInfoServiceImpl implements AtpTagInfoService {
                 atpTagInfoVos.add(atpTagInfoVo);
             }
             return RpcResultUtils.suc(atpTagInfoVos);
-        } catch (BeansException e) {
+        } catch (Exception e) {
             return RpcResultUtils.error("200000003", "获取用例标签失败" + e.getMessage());
         }
 
@@ -85,6 +101,10 @@ public class AtpTagInfoServiceImpl implements AtpTagInfoService {
 
     @Override
     public RpcResultDTO<List<AtpTagInfoVo>> queryTagInfoAll() {
-        return RpcResultUtils.suc(atpTagInfoBusiness.queryTagInfoAll());
+        try {
+            return RpcResultUtils.suc(atpTagInfoBusiness.queryTagInfoAll());
+        } catch (Exception e) {
+            return RpcResultUtils.error("200000008", "查询标签失败" + e.getMessage());
+        }
     }
 }

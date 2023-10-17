@@ -1,7 +1,7 @@
 package com.hundsun.atp.servers.service.impl;
 
 
-import com.hundsun.atp.api.AtpUsecaseService;
+import com.hundsun.atp.api.usecase.AtpUsecaseService;
 import com.hundsun.atp.api.taginfo.AtpTagInfoService;
 import com.hundsun.atp.common.domain.dto.folder.AtpCommonFolderDto;
 import com.hundsun.atp.common.domain.dto.tag.AtpTagInfoDto;
@@ -45,7 +45,7 @@ public class AtpTagInfoServiceImplTest {
         atpTagInfoDto.setTagId("testTagId");
         atpTagInfoDto.setTagKey("标签Test");
         atpTagInfoDto.setProjectId("空间Test");
-        RpcResultDTO<Boolean> resultCreate = atpTagInfoService.createTagInfo(atpTagInfoDto);
+//        RpcResultDTO<Boolean> resultCreate = atpTagInfoService.createTagInfo(atpTagInfoDto);
         RpcResultDTO<List<AtpTagInfoVo>> listRpcResultDTO = atpTagInfoService.queryTagInfoAll();
         System.out.println(listRpcResultDTO);
         String id = atpTagInfoMapper.selectByTagId(atpTagInfoDto.getTagId());
@@ -137,7 +137,7 @@ public class AtpTagInfoServiceImplTest {
             }
         }
         interfaceUsecaseDto.setTags(atpTagInfoDtos);
-        atpUsecaseService.editUsecaseTags(interfaceUsecaseDto);
+        atpUsecaseService.editUsecaseTags(interfaceUsecaseDto.getTags(),interfaceUsecaseDto.getCaseId());
 
         // 再去选择一次标签，这次不选择2、3，选择3、4
         ArrayList<AtpTagInfoDto> atpTagInfoDtos1 = new ArrayList<>();
@@ -147,7 +147,7 @@ public class AtpTagInfoServiceImplTest {
             }
         }
         interfaceUsecaseDto.setTags(atpTagInfoDtos1);
-        atpUsecaseService.editUsecaseTags(interfaceUsecaseDto);
+        atpUsecaseService.editUsecaseTags(interfaceUsecaseDto.getTags(),interfaceUsecaseDto.getCaseId());
 
         AtpTagInfo atpTagInfoSec = atpTagInfoMapper.selectByTagKey(atpTagInfoDto3.getTagKey());
         AtpTagInfoDto atpTagInfoDtoSec = new AtpTagInfoDto();
