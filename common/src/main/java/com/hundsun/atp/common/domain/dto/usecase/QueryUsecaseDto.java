@@ -41,7 +41,7 @@ public class QueryUsecaseDto implements Serializable {
 
     private List<String> tagIdList;
 
-    private String checkResult;
+    private List<String> checkResult;
 
     private Integer pageSize;
 

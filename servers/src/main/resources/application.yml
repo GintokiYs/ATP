@@ -36,6 +36,7 @@ spring:
     serialization:
       write-dates-as-timestamps: true
 server:
+  port: 8080
   shutdown: graceful
   servlet:
     context-path: /atp

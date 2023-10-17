@@ -20,6 +20,27 @@
         <result column="remark" property="remark"/>
     </resultMap>
 
+    <resultMap id="AtpUseCaseWithInstanceMap"
+               type="com.hundsun.atp.common.domain.entity.usecase.AtpUseCaseWithInstance">
+        <id column="id" property="id"/>
+        <result column="case_id" property="caseId"/>
+        <result column="name" property="name"/>
+        <result column="folder_id" property="folderId"/>
+        <result column="check_rule" property="checkRule"/>
+        <result column="case_type" property="caseType"/>
+        <result column="execute_config" property="executeConfig"/>
+        <result column="enabled" property="enabled"/>
+        <result column="create_user" property="createUser"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_user" property="updateUser"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="interface_content" property="interfaceContent"/>
+        <result column="remark" property="remark"/>
+        <result column="instance_id" property="instanceId"/>
+        <result column="execute_status" property="executeStatus"/>
+        <result column="bussiness_time" property="bussinessTime"/>
+    </resultMap>
+
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, case_id, name, folder_id, check_rule, case_type, execute_config, enabled, create_user, create_time, update_user, update_time, interface_content, remark
@@ -88,4 +109,45 @@
         order by a.update_time desc
     </select>
 
+    <select id="selectUseCaseWithInstanceInfo" resultMap="AtpUseCaseWithInstanceMap">
+        select
+        a.id,
+        a.case_id,
+        a.name,
+        a.folder_id,
+        a.check_rule,
+        a.case_type,
+        a.execute_config,
+        a.enabled,
+        a.create_user,
+        a.create_time,
+        a.update_user,
+        a.update_time,
+        a.interface_content,
+        a.remark,
+        b.instance_id,
+        b.execute_status,
+        b.bussiness_time
+        from atp_use_case as a
+        left join
+        (select * from (
+        select *,row_number() over  (partition by use_case_id order by bussiness_time desc) as row_num from atp_use_case_instance) as tmp
+        where  tmp.row_num =1)
+        as b
+        on a.id = b.use_case_id
+        where a.enabled = 1
+        <if test="folderId != null and folderId != ''">
+            and a.folder_id = #{folderId}
+        </if>
+        <if test="name != null and name != ''">
+            and UPPER(a.name) like concat('%',UPPER(#{name}),'%')
+        </if>
+        <if test="checkResultList != null and checkResultList.size() > 0">
+            and b.execute_status in
+            <foreach item="checkResult" collection="checkResultList" open="(" separator="," close=")">
+                #{checkResult}
+            </foreach>
+        </if>
+        order by a.case_id , b.bussiness_time desc
+    </select>
 </mapper>

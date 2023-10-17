@@ -53,7 +53,7 @@ public class AtpUseCaseWithInstance implements Serializable {
     private Integer caseType;
 
     @ApiModelProperty("执行配置,Map<String,String>")
-    private Map<String, String> executeConfig;
+    private String executeConfig;
 
     @ApiModelProperty("标签集")
     private List<AtpTagInfoVo> tags;

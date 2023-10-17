@@ -14,6 +14,7 @@ import com.hundsun.atp.common.domain.dto.usecase.DeleteUsecaseDto;
 import com.hundsun.atp.common.domain.dto.usecase.QueryUsecaseDto;
 import com.hundsun.atp.common.domain.entity.RpcResultDTO;
 import com.hundsun.atp.common.domain.entity.usecase.AtpUseCaseStatistics;
+import com.hundsun.atp.common.domain.entity.usecase.AtpUseCaseWithInstance;
 import com.hundsun.atp.common.domain.vo.taginfo.AtpTagInfoVo;
 import com.hundsun.atp.common.domain.vo.usecase.InterfaceUsecaseVo;
 import com.hundsun.atp.common.enums.EnableEnum;
@@ -55,15 +56,11 @@ public class AtpUsecaseServiceImpl implements AtpUsecaseService {
     private AbstractUseCaseBusiness abstractUseCaseBusiness;
 
     @Autowired
-    private AtpUseCaseBusiness atpUseCaseBusiness;
-
-    @Autowired
     private AtpTagInfoBusiness atpTagInfoBusiness;
 
     @Autowired
     private AtpRefTagUseCaseBusiness atpRefTagUseCaseBusiness;
 
-    // 用例新建（编辑、删除、查询）
     @Autowired
     private AtpUseCaseMapper atpUseCaseMapper;
 
@@ -106,27 +103,25 @@ public class AtpUsecaseServiceImpl implements AtpUsecaseService {
         List<AtpUseCaseStatistics> result = new ArrayList<>();
         // 根据目录id,用例名称和 实例执行结果 查询所有用例
         PageHelper.startPage(queryUsecaseDto.getPageNum(), queryUsecaseDto.getPageSize());
-        List<AtpUseCase> atpUseCases =
-                atpUseCaseMapper.selectUseCaseInfo(queryUsecaseDto.getFoldId(), queryUsecaseDto.getName());
-        PageInfo<AtpUseCase> atpUseCasePageInfo = new PageInfo<>(atpUseCases);
-        List<AtpUseCase> list = atpUseCasePageInfo.getList();
+
+        List<AtpUseCaseWithInstance> atpUseCaseWithInstances = atpUseCaseMapper.selectUseCaseWithInstanceInfo(queryUsecaseDto.getFoldId(), queryUsecaseDto.getName(), queryUsecaseDto.getCheckResult());
+        PageInfo<AtpUseCaseWithInstance> atpUseCaseWithInstancePageInfo = new PageInfo<>(atpUseCaseWithInstances);
+        List<AtpUseCaseWithInstance> list = atpUseCaseWithInstancePageInfo.getList();
         if (CollUtil.isEmpty(list)) {
             PageInfo<AtpUseCaseStatistics> atpUseCaseStatisticsPageInfo = new PageInfo<>(result);
             return RpcResultUtils.suc((atpUseCaseStatisticsPageInfo));
         }
-        List<String> caseIdList = list.stream().map(AtpUseCase::getId).collect(Collectors.toList());
+        List<String> caseIdList = list.stream().map(AtpUseCaseWithInstance::getId).collect(Collectors.toList());
         QueryWrapper<AtpUseCaseInstance> queryWrapper = new QueryWrapper<>();
         queryWrapper.in("use_case_id", caseIdList);
-        if (queryUsecaseDto.getCheckResult() != null) {
-            queryWrapper = queryWrapper.eq("execute_status", queryUsecaseDto.getCheckResult());
-        }
-        List<AtpUseCaseInstance> atpUseCaseInstances = atpUseCaseInstanceBusiness.list(queryWrapper.orderByDesc("bussiness_time"));
+        List<AtpUseCaseInstance> atpUseCaseInstances = atpUseCaseInstanceBusiness.list(queryWrapper);
         Map<String, List<AtpUseCaseInstance>> withInstanceMap = atpUseCaseInstances.stream()
                 .collect(Collectors.groupingBy(AtpUseCaseInstance::getUseCaseId));
 
-        for (AtpUseCase atpUseCase : list) {
+        for (AtpUseCaseWithInstance atpUseCase : list) {
             String id = atpUseCase.getId();
             List<AtpUseCaseInstance> atpUseCaseWithInstances1 = withInstanceMap.get(id);
+            AtpUseCaseStatistics atpUseCaseStatistics = useCaseConvert.enhanceStatistics(atpUseCase);
             if (CollUtil.isNotEmpty(atpUseCaseWithInstances1)) {
                 int totalInstanceCount = atpUseCaseWithInstances1.size();
                 int sucInstanceCount = 0;
@@ -141,21 +136,15 @@ public class AtpUsecaseServiceImpl implements AtpUsecaseService {
                     }
                 }
                 // 填入最新business的用例实例结果
-                AtpUseCaseStatistics atpUseCaseStatistics = useCaseConvert.enhanceStatistics(atpUseCase);
-                AtpUseCaseInstance lastedAtpUseCaseInstance = atpUseCaseWithInstances1.get(0);
-                atpUseCaseStatistics.setInstanceId(lastedAtpUseCaseInstance.getInstanceId());
-                atpUseCaseStatistics.setBussinessTime(lastedAtpUseCaseInstance.getBussinessTime());
-                atpUseCaseStatistics.setExecuteStatus(lastedAtpUseCaseInstance.getExecuteStatus());
-
                 atpUseCaseStatistics.setTotalCount(totalInstanceCount);
                 atpUseCaseStatistics.setSuccessCount(sucInstanceCount);
                 atpUseCaseStatistics.setSuccessRate(100 * sucInstanceCount / totalInstanceCount);
                 atpUseCaseStatistics.setFailCount(failInstanceCount);
                 atpUseCaseStatistics.setFailRate(100 * failInstanceCount / totalInstanceCount);
-                List<AtpTagInfoVo> tagList = queryUsecaseTags(id);
-                atpUseCaseStatistics.setTags(tagList);
-                result.add(atpUseCaseStatistics);
             }
+            List<AtpTagInfoVo> tagList = queryUsecaseTags(id);
+            atpUseCaseStatistics.setTags(tagList);
+            result.add(atpUseCaseStatistics);
         }
         PageInfo<AtpUseCaseStatistics> atpUseCaseStatisticsPageInfo = new PageInfo<>(result);
 
@@ -229,7 +218,7 @@ public class AtpUsecaseServiceImpl implements AtpUsecaseService {
             //校验所选的tag是否有重复（可能它又新增了一个与之前一模一样的tag，然后框选了两个一样的）
 //            List<AtpTagInfoDto> atpTagInfoDtoList = interfaceUsecaseDto.getTags();
             //如果有重复就抛异常
-            Precondition.checkArgument(!atpTagInfoBusiness.hasDuplicateTagKey(atpTagInfoDtoList), "200000001");
+            Precondition.checkArgument(!AtpTagInfoBusiness.hasDuplicateTagKey(atpTagInfoDtoList), "200000001");
             //再根据caseId去关联表里把对应的tagcase匹配记录删除掉，要先删，再插入
 //            String caseId = interfaceUsecaseDto.getCaseId();
             atpRefTagUseCaseBusiness.deleteByCaseId(caseId);

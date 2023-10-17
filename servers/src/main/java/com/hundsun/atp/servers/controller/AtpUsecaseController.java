@@ -3,16 +3,12 @@ package com.hundsun.atp.servers.controller;
 import com.github.pagehelper.PageInfo;
 import com.hundsun.atp.api.taginfo.AtpTagInfoService;
 import com.hundsun.atp.api.usecase.AtpUsecaseService;
-import com.hundsun.atp.common.domain.dto.folder.AtpCommonFolderDto;
 import com.hundsun.atp.common.domain.dto.tag.AtpTagInfoDto;
 import com.hundsun.atp.common.domain.dto.usecase.AbstractUsecaseDto;
 import com.hundsun.atp.common.domain.dto.usecase.DeleteUsecaseDto;
-import com.hundsun.atp.common.domain.dto.usecase.InterfaceUsecaseDto;
 import com.hundsun.atp.common.domain.dto.usecase.QueryUsecaseDto;
 import com.hundsun.atp.common.domain.entity.RpcResultDTO;
 import com.hundsun.atp.common.domain.entity.usecase.AtpUseCaseStatistics;
-import com.hundsun.atp.common.domain.vo.taginfo.AtpTagInfoVo;
-import com.hundsun.atp.common.domain.vo.usecase.InterfaceUsecaseVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,6 +71,7 @@ public class AtpUsecaseController {
     public RpcResultDTO<Boolean> delete(@Validated @RequestBody DeleteUsecaseDto deleteUsecaseDto) {
         return atpUsecaseService.delete(deleteUsecaseDto);
     }
+
     // 用例打标签（在用例上新增标签，再选中，相当于把选中的标签的List传给AtpUseCaseDto）
 //    @PostMapping("/edittags")
 //    @ApiOperation("用例实例上新增标签")
@@ -86,14 +83,15 @@ public class AtpUsecaseController {
 //        return atpUsecaseService.editUsecaseTags(atpTagInfoDtoList,caseId,folderId);
 //
 //    }
+
     @PostMapping("/edittags")
-    @ApiOperation("用例实例上新增标签")
-    public RpcResultDTO<Boolean> editUsecaseTags(@Validated @RequestBody AbstractUsecaseDto abstractUsecaseDto){
+//    @ApiOperation("用例实例上新增标签")
+    public RpcResultDTO<Boolean> editUsecaseTags(@Validated @RequestBody AbstractUsecaseDto abstractUsecaseDto) {
         List<AtpTagInfoDto> atpTagInfoDtoList = abstractUsecaseDto.getTags();
         String caseId = abstractUsecaseDto.getCaseId();
         String folderId = abstractUsecaseDto.getFolderId();
         // todo 后面把folderId的关联关系去掉
-        return atpUsecaseService.editUsecaseTags(atpTagInfoDtoList,caseId);
+        return atpUsecaseService.editUsecaseTags(atpTagInfoDtoList, caseId);
 
 //    // 用例查询用例集的标签集合
 //    @PostMapping("/queryfoldertags")
@@ -108,5 +106,5 @@ public class AtpUsecaseController {
 //    public RpcResultDTO<List<InterfaceUsecaseVo>> queryCasesByTags(@Validated @RequestBody List<AtpTagInfoDto> atpTagInfoDtos){
 //        return atpUsecaseService.queryCasesByTags(atpTagInfoDtos);
 //    }
-
+    }
 }
