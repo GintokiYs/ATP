@@ -36,7 +36,7 @@ public class AtpTagInfoController {
 
     @PostMapping("/create")
     @ApiOperation("新建标签")
-    public RpcResultDTO<Boolean> createTagInfo(@Validated @RequestBody AtpTagInfoDto tagInfoDto) {
+    public RpcResultDTO<AtpTagInfoVo> createTagInfo(@Validated @RequestBody AtpTagInfoDto tagInfoDto) {
 
         return atpTagInfoService.createTagInfo(tagInfoDto);
     }

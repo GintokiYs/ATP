@@ -90,9 +90,9 @@ public abstract class AbstractUseCaseBusiness<IN extends CaseRunParams, OUT exte
 
     }
 
-    public List<AtpUseCase> queryUserCaseByCaseIdList(List<Long> caseIdList) {
+    public List<AtpUseCase> queryUserCaseByCaseIdList(List<String> caseIdList) {
         // 获取当前空间下所有的Folder
-        return this.baseMapper.queryUseCaseInfoList(caseIdList);
+        return atpUseCaseMapper.selectByCaseIds(caseIdList);
     }
 
     public List<AtpUseCase> queryByCaseIds(ArrayList<String> caseIds) {

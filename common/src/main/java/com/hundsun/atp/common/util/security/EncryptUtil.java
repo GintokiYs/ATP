@@ -7,6 +7,8 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.asymmetric.KeyType;
 import cn.hutool.crypto.asymmetric.RSA;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 文件描述
@@ -24,8 +26,9 @@ import lombok.extern.slf4j.Slf4j;
  * <p>
  * Copyright © 2023 Hundsun Technologies Inc. All Rights Reserved
  **/
-@Slf4j
 public class EncryptUtil {
+    private static final Logger log = LoggerFactory.getLogger(EncryptUtil.class);
+
     /**
      * RSA私钥
      */

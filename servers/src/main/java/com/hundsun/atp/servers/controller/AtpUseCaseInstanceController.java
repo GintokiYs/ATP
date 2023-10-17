@@ -41,7 +41,7 @@ public class AtpUseCaseInstanceController {
 //    }
 
     @PostMapping("/caseRun")
-    @ApiOperation("新建测试用例")
+    @ApiOperation("用例执行")
     public RpcResultDTO<String> caseRun(@Validated @RequestBody CaseTestRequest caseTestRequest) {
         return atpUseCaseInstanceService.caseRun(caseTestRequest);
     }

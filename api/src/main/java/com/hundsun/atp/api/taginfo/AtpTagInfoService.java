@@ -16,7 +16,7 @@ import java.util.List;
 public interface AtpTagInfoService {
 
     // 标签新建
-    RpcResultDTO<Boolean> createTagInfo(AtpTagInfoDto tagInfoDto);
+    RpcResultDTO<AtpTagInfoVo> createTagInfo(AtpTagInfoDto tagInfoDto);
 
     // 标签编辑
     RpcResultDTO<Boolean> editTagInfo(AtpTagInfoDto tagInfoDto);

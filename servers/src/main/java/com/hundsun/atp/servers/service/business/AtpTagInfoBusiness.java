@@ -17,6 +17,7 @@ import com.hundsun.atp.persister.mapper.AtpRefTagUseCaseMapper;
 import com.hundsun.atp.persister.mapper.AtpTagInfoMapper;
 import com.hundsun.atp.persister.model.AtpRefTagUseCase;
 import com.hundsun.atp.persister.model.AtpTagInfo;
+import com.hundsun.atp.servers.service.convert.TagInfoConvert;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,13 +42,16 @@ public class AtpTagInfoBusiness extends ServiceImpl<AtpTagInfoMapper, AtpTagInfo
     @Autowired
     private AtpRefTagUseCaseMapper atpRefTagUseCaseMapper;
 
+    @Autowired
+    private TagInfoConvert tagInfoConvert;
+
     /**
      * 新建TagInfo
      *
      * @param tagInfoDto
      * @return
      */
-    public Boolean createTagInfo(AtpTagInfoDto tagInfoDto) {
+    public AtpTagInfoVo createTagInfo(AtpTagInfoDto tagInfoDto) {
         // 根据标签名称 校验是否存在同名
         Precondition.checkArgument(!validateTagName(tagInfoDto.getTagKey()), "200000001");
         return insert(tagInfoDto);
@@ -129,7 +133,7 @@ public class AtpTagInfoBusiness extends ServiceImpl<AtpTagInfoMapper, AtpTagInfo
      * @param tagInfoDto
      * @return
      */
-    public boolean insert(AtpTagInfoDto tagInfoDto) {
+    public AtpTagInfoVo insert(AtpTagInfoDto tagInfoDto) {
         AtpTagInfo atpTagInfo = new AtpTagInfo();
         //todo 后续要写模型转化convert类
         BeanUtils.copyProperties(tagInfoDto, atpTagInfo);
@@ -138,7 +142,8 @@ public class AtpTagInfoBusiness extends ServiceImpl<AtpTagInfoMapper, AtpTagInfo
         atpTagInfo.setTagId(IdUtil.simpleUUID());
         atpTagInfo.setEnabled(EnableEnum.VALID.getCode());
         int insertCount = atpTagInfoMapper.insert(atpTagInfo);
-        return insertCount > 0;
+        Precondition.checkArgument(insertCount < 1, "000000", "新增标签失败");
+        return tagInfoConvert.toVo(atpTagInfo);
     }
 
     //todo 可能需要再写个insert方法，形参为tagKey

@@ -34,4 +34,6 @@ public class AtpTagInfoVo extends AtpBaseVo {
     @ApiModelProperty("是否可用")
     private Integer enabled;
 
+    @ApiModelProperty("用例集id")
+    private String folderId;
 }
