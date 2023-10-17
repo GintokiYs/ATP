@@ -65,6 +65,12 @@ public class AtpCommonFolder implements Serializable {
     @TableField(value = "project_id")
     private String projectId;
 
+    /**
+     * 执行配置,Map<String,String>
+     * @description:
+     * http接口用例的配置结构:
+     *      {"url":"http://xxxx/xx/xxx"}
+     */
     @ApiModelProperty("执行配置,Map<String,String>")
     @TableField(value = "execute_config")
     private String executeConfig;

@@ -1,8 +1,10 @@
 package com.hundsun.atp.servers.service.business.caserun.impl.http;
 
+import com.hundsun.atp.servers.service.business.caserun.CaseRunParams;
+
 import java.util.Map;
 
-public class HttpPostCaseParams {
+public class HttpPostCaseParams extends CaseRunParams {
 
     private String url;
     private String tCaseJson;

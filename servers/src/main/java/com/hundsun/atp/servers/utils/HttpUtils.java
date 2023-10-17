@@ -24,8 +24,9 @@ public class HttpUtils {
         con.setDoOutput(true);
 
         // 设置请求属性
-        requestProperties.forEach(con::setRequestProperty);
-
+        if (requestProperties != null && requestProperties.size() > 0){
+            requestProperties.forEach(con::setRequestProperty);
+        }
         int responseCode = -1;
         StringBuilder response = new StringBuilder();
 

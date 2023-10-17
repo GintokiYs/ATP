@@ -20,4 +20,11 @@
         id, instance_id, use_case_id, execute_status, start_user, start_time, stop_time, bussiness_time, stop_user
     </sql>
 
+    <select id="selectByInstanceId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from atp_use_case_instance
+        where instance_id = #{instanceId,jdbcType=VARCHAR}
+    </select>
+
 </mapper>

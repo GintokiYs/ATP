@@ -45,6 +45,9 @@ public class AtpUseCaseInstance implements Serializable {
     @TableField(value = "use_case_id")
     private String useCaseId;
 
+    /**
+     * {@link com.hundsun.atp.common.enums.ExecuteStatusEnum}
+     */
     @ApiModelProperty("执行状态")
     @TableField(value = "execute_status")
     private String executeStatus;

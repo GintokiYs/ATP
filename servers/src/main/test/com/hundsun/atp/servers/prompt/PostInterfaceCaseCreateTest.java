@@ -14,34 +14,33 @@ public class PostInterfaceCaseCreateTest {
     @Test
     public void createTestCaseByJavaCodeTest() throws Exception {
         LLMApiUtils.init(API_KEY, API_URL, LLMEnum.GPT3_5);
-        String javaCode = "    " +
-                "    public String saveUser(User user);";
-        String dependentClass = "public class User {\n" +
+        String javaCode = "    @PostMapping(\"/caseRun\")\n" +
+                "    @ApiOperation(\"新建测试用例\")\n" +
+                "    public RpcResultDTO<Boolean> caseRun(@Validated @RequestBody CaseTestRequest caseTestRequest) {\n" +
+                "        return atpUseCaseInstanceService.caseRun(caseTestRequest);\n" +
+                "    }";
+        String dependentClass = "public class CaseTestRequest extends AtpBaseDto {\n" +
                 "\n" +
-                "    private String name;\n" +
+                "    private List<Long> caseIdList;\n" +
+                "    private long folderId;\n" +
                 "\n" +
-                "    private Integer age;\n" +
+                "    public List<Long> getCaseIdList() {\n" +
+                "        return caseIdList;\n" +
+                "    }\n" +
                 "\n" +
-                "    /**\n" +
-                "     * {@link UserType}\n" +
-                "     */\n" +
-                "    private int userType;\n" +
+                "    public void setCaseIdList(List<Long> caseIdList) {\n" +
+                "        this.caseIdList = caseIdList;\n" +
+                "    }\n" +
                 "\n" +
-                "    private int userId;\n" +
+                "    public long getFolderId() {\n" +
+                "        return folderId;\n" +
+                "    }\n" +
                 "\n" +
-                "}" +
-                "public enum UserType {\n" +
-                "\n" +
-                "    ADMIN(0),\n" +
-                "    SYSTEM(1),\n" +
-                "    USER(2),\n" +
-                "    GUEST(3);\n" +
-                "\n" +
-                "    private int type;\n" +
-                "\n" +
+                "    public void setFolderId(long folderId) {\n" +
+                "        this.folderId = folderId;\n" +
+                "    }\n" +
                 "}";
-        String dependentClass2 = "public class User {private String name;      private Integer age;   private int userType;      private int userId;  } public enum UserType {      ADMIN(0),     SYSTEM(1),     USER(2),     GUEST(3);      private int type;  }";
-        ArrayNode caseArray = PostInterfaceCaseCreate.createTestCaseByJavaCode(javaCode, dependentClass2, 10);
+        ArrayNode caseArray = PostInterfaceCaseCreate.createTestCaseByJavaCode(javaCode, dependentClass, 10);
         ObjectMapper objectMapper = new ObjectMapper();
         String caseStr = objectMapper.writeValueAsString(caseArray);
         System.out.println(caseStr);

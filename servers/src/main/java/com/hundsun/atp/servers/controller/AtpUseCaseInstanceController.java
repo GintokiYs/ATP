@@ -2,7 +2,7 @@ package com.hundsun.atp.servers.controller;
 
 import com.hundsun.atp.api.AtpUseCaseInstanceService;
 import com.hundsun.atp.api.taginfo.AtpTagInfoService;
-import com.hundsun.atp.common.domain.dto.usecaseinstance.InterfaceUsecaseInstanceDto;
+import com.hundsun.atp.common.domain.dto.CaseTestRequest;
 import com.hundsun.atp.common.domain.entity.RpcResultDTO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -39,5 +39,13 @@ public class AtpUseCaseInstanceController {
 //    public RpcResultDTO<Boolean> editInstanceTag(@Validated @RequestBody InterfaceUsecaseInstanceDto interfaceUsecaseInstanceDto){
 //        return atpUseCaseInstanceService.editInstanceTag(interfaceUsecaseInstanceDto);
 //    }
+
+    @PostMapping("/caseRun")
+    @ApiOperation("新建测试用例")
+    public RpcResultDTO<String> caseRun(@Validated @RequestBody CaseTestRequest caseTestRequest) {
+        return atpUseCaseInstanceService.caseRun(caseTestRequest);
+    }
+
+
 
 }

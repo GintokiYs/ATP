@@ -20,6 +20,6 @@ public interface AtpUseCaseInstanceService {
     /**
      * 执行用例
      */
-    RpcResultDTO<Boolean> testTCaseList(CaseTestRequest caseTestRequest);
+    RpcResultDTO<String> caseRun(CaseTestRequest caseTestRequest);
 
 }

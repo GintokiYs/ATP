@@ -1,14 +1,13 @@
 package com.hundsun.atp.servers.service.impl;
 
-import com.hundsun.atp.api.taginfo.AtpTagInfoService;
-import com.hundsun.atp.api.usecase.AtpUsecaseService;
+import com.hundsun.atp.api.AtpTagInfoService;
+import com.hundsun.atp.api.AtpUsecaseService;
 import com.hundsun.atp.common.domain.dto.folder.AtpCommonFolderDto;
 import com.hundsun.atp.common.domain.dto.tag.AtpTagInfoDto;
 import com.hundsun.atp.common.domain.dto.usecase.InterfaceUsecaseDto;
 import com.hundsun.atp.common.domain.entity.RpcResultDTO;
 import com.hundsun.atp.common.domain.vo.taginfo.AtpTagInfoVo;
 import com.hundsun.atp.persister.mapper.AtpTagInfoMapper;
-import com.hundsun.atp.persister.model.AtpTagInfo;
 import com.hundsun.atp.servers.AtpApplication;
 import com.hundsun.atp.servers.service.business.AtpTagInfoBusiness;
 import org.junit.Test;

@@ -1,15 +1,18 @@
 package com.hundsun.atp.servers.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hundsun.atp.api.AtpUseCaseInstanceService;
 import com.hundsun.atp.common.domain.dto.CaseTestRequest;
 import com.hundsun.atp.common.domain.entity.RpcResultDTO;
 import com.hundsun.atp.common.enums.UseCaseTypeEnum;
+import com.hundsun.atp.common.util.RpcResultUtils;
 import com.hundsun.atp.persister.model.AtpCommonFolder;
 import com.hundsun.atp.persister.model.AtpUseCase;
-import com.hundsun.atp.servers.service.business.AtpCommonFolderBusiness;
-import com.hundsun.atp.servers.service.business.AtpInterfaceUseCaseBusiness;
-import com.hundsun.atp.servers.service.business.AtpTagInfoBusiness;
+import com.hundsun.atp.servers.service.business.*;
+import com.hundsun.atp.servers.service.business.caserun.CaseRunResult;
 import com.hundsun.atp.servers.service.business.caserun.impl.http.HttpPostCaseParams;
 import com.hundsun.atp.servers.service.business.factory.UseCaseBusinessFactory;
 import org.slf4j.Logger;
@@ -20,6 +23,9 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * <p>
@@ -35,37 +41,41 @@ public class AtpUseCaseInstanceServiceImpl implements AtpUseCaseInstanceService 
     private static Logger logger = LoggerFactory.getLogger(AtpUseCaseInstanceServiceImpl.class);
 
     @Autowired
-    private AtpTagInfoBusiness atpTagInfoBusiness;
-
-    @Autowired
     private AtpCommonFolderBusiness atpCommonFolderBusiness;
 
+    @Autowired
+    private AtpUseCaseInstanceBusiness atpUseCaseInstanceBusiness;
+
+    @Autowired
     private UseCaseBusinessFactory useCaseBusinessFactory;
 
+    // Create an ExecutorService for the asynchronous execution of test cases
+
+    private ExecutorService executorService = Executors.newFixedThreadPool(5); // You can adjust the pool size as needed
+
+
     @Override
-    public RpcResultDTO<Boolean> testTCaseList(CaseTestRequest caseTestRequest) {
+    public RpcResultDTO<String> caseRun(CaseTestRequest caseTestRequest) {
         List<Long> caseIdList = caseTestRequest.getCaseIdList();
         Long foldId = caseTestRequest.getFolderId();
         AtpCommonFolder atpCommonFolder = atpCommonFolderBusiness.getById(foldId);
-        AtpInterfaceUseCaseBusiness atpInterfaceUseCaseBusiness = (AtpInterfaceUseCaseBusiness)useCaseBusinessFactory.buildBusiness(UseCaseTypeEnum.INTERFACE);
-        List<AtpUseCase> caseList = atpInterfaceUseCaseBusiness.queryUserCaseByCaseIdList(caseIdList);
-        List<JsonNode> testResultList = new ArrayList<>();
-        for (AtpUseCase atpUseCase : caseList) {
-            HttpPostCaseParams httpPostCaseParams = new HttpPostCaseParams();
-            httpPostCaseParams.settCaseJson(atpUseCase.getInterfaceContent());
-            // todo 获取测试集对应的URL
-            String forlderName = atpCommonFolder.getFolderName();
-            String url = "";
-            httpPostCaseParams.setUrl(url);
-            try {
-                JsonNode jsonNode = atpInterfaceUseCaseBusiness.testCase(httpPostCaseParams);
-                testResultList.add(jsonNode);
-            } catch (IOException ioException){
-                logger.error("HttpPost用例执行异常, 用例名称：{}, 用例id：{}。", atpUseCase.getName(), atpUseCase.getCaseId());
+        AbstractUseCaseBusiness atpInterfaceUseCaseBusiness = useCaseBusinessFactory.buildBusiness(UseCaseTypeEnum.INTERFACE);
+        final List<AtpUseCase> caseList = atpInterfaceUseCaseBusiness.queryUserCaseByCaseIdList(caseIdList);
+        executorService.submit(new Runnable() {
+            @Override
+            public void run() {
+                for (AtpUseCase atpUseCase : caseList) {
+                    try {
+                        atpInterfaceUseCaseBusiness.testCase(atpUseCase, atpCommonFolder);
+                    } catch (Exception e){
+                        logger.error("HttpPost用例执行异常, 用例名称：{}, 用例id：{}。", atpUseCase.getName(), atpUseCase.getCaseId());
+                    }
+                }
             }
-        }
+        });
 
-        // todo 保存/校验testResultList
-        return null;
+        return RpcResultUtils.suc("用例执行完成");
     }
+
+
 }

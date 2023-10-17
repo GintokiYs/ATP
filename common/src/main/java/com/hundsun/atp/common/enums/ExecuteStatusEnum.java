@@ -6,7 +6,8 @@ package com.hundsun.atp.common.enums;
 public enum ExecuteStatusEnum {
     SUCCESS("SUCCESS", "成功"),
     FAIL("FAIL", "失败"),
-    UNEXECUTED("UNEXECUTED", "未执行");
+    RUNNING("RUNNING", "运行中"),
+    UNKNOW("UNKNOW", "未执行");
 
     private String code;
 
