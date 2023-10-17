@@ -7,22 +7,22 @@ import java.util.List;
  */
 public class CaseTestRequest extends AtpBaseDto {
 
-    private List<Long> caseIdList;
-    private long folderId;
+    private List<String> caseIdList;
+    private String folderId;
 
-    public List<Long> getCaseIdList() {
+    public List<String> getCaseIdList() {
         return caseIdList;
     }
 
-    public void setCaseIdList(List<Long> caseIdList) {
+    public void setCaseIdList(List<String> caseIdList) {
         this.caseIdList = caseIdList;
     }
 
-    public long getFolderId() {
+    public String getFolderId() {
         return folderId;
     }
 
-    public void setFolderId(long folderId) {
+    public void setFolderId(String folderId) {
         this.folderId = folderId;
     }
 }

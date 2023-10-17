@@ -56,8 +56,8 @@ public class AtpUseCaseInstanceServiceImpl implements AtpUseCaseInstanceService 
 
     @Override
     public RpcResultDTO<String> caseRun(CaseTestRequest caseTestRequest) {
-        List<Long> caseIdList = caseTestRequest.getCaseIdList();
-        Long foldId = caseTestRequest.getFolderId();
+        List<String> caseIdList = caseTestRequest.getCaseIdList();
+        String foldId = caseTestRequest.getFolderId();
         AtpCommonFolder atpCommonFolder = atpCommonFolderBusiness.getById(foldId);
         AbstractUseCaseBusiness atpInterfaceUseCaseBusiness = useCaseBusinessFactory.buildBusiness(UseCaseTypeEnum.INTERFACE);
         final List<AtpUseCase> caseList = atpInterfaceUseCaseBusiness.queryUserCaseByCaseIdList(caseIdList);
