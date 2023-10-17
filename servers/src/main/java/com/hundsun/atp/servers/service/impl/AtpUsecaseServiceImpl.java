@@ -53,6 +53,9 @@ public class AtpUsecaseServiceImpl implements AtpUsecaseService {
     private AbstractUseCaseBusiness abstractUseCaseBusiness;
 
     @Autowired
+    private AtpUseCaseBusiness atpUseCaseBusiness;
+
+    @Autowired
     private AtpTagInfoBusiness atpTagInfoBusiness;
 
     @Autowired
@@ -82,7 +85,7 @@ public class AtpUsecaseServiceImpl implements AtpUsecaseService {
             List<AtpTagInfoDto> tags = usecase.getTags();
             // 根据标签和atpUseCases ,更新中间关联表信息
             for (AtpUseCase atpUseCase : atpUseCases) {
-                editUsecaseTags(tags, atpUseCase.getCaseId(), atpUseCase.getFolderId());
+                editUsecaseTags(tags, atpUseCase.getCaseId());
             }
 
             if (result) {
@@ -174,7 +177,7 @@ public class AtpUsecaseServiceImpl implements AtpUsecaseService {
             AtpUseCase atpUseCase = abstractUseCaseBusinessImpl.generateUpdateRecord(usecaseDto);
 
             // 根据标签和atpUseCase ,更新中间关联表信息
-            editUsecaseTags(usecaseDto.getTags(), atpUseCase.getCaseId(), atpUseCase.getFolderId());
+            editUsecaseTags(usecaseDto.getTags(), atpUseCase.getCaseId());
 
             if (abstractUseCaseBusinessImpl.updateById(atpUseCase)) {
                 return RpcResultUtils.suc(true);
@@ -217,16 +220,19 @@ public class AtpUsecaseServiceImpl implements AtpUsecaseService {
 
     //用例编辑标签
     @Override
-    public RpcResultDTO<Boolean> editUsecaseTags(List<AtpTagInfoDto> atpTagInfoDtoList, String caseId, String folderId) {
+    public RpcResultDTO<Boolean> editUsecaseTags(List<AtpTagInfoDto> atpTagInfoDtoList, String caseId) {
         try {
             //校验所选的tag是否有重复（可能它又新增了一个与之前一模一样的tag，然后框选了两个一样的）
+//            List<AtpTagInfoDto> atpTagInfoDtoList = interfaceUsecaseDto.getTags();
             //如果有重复就抛异常
             Precondition.checkArgument(!atpTagInfoBusiness.hasDuplicateTagKey(atpTagInfoDtoList), "200000001");
             //再根据caseId去关联表里把对应的tagcase匹配记录删除掉，要先删，再插入
+//            String caseId = interfaceUsecaseDto.getCaseId();
             atpRefTagUseCaseBusiness.deleteByCaseId(caseId);
             //再对atp_tag_info这个表里进行insert，如果能找到对应的tagKey就不做操作，找不到就新增
 //            atpTagInfoBusiness.processAtpTagInfoList(atpTagInfoDtoList);
             //再对atp_ref_tag_use_case表进行插入操作，使得use_case_instance与tag_info关联起来
+//            String folderId = interfaceUsecaseDto.getFolderId();
             for (AtpTagInfoDto dto : atpTagInfoDtoList) {
 //                AtpTagInfo atpTagInfo = atpTagInfoBusiness.queryByTagKey(dto.getTagKey());
                 String tagId = dto.getId();
@@ -236,7 +242,7 @@ public class AtpUsecaseServiceImpl implements AtpUsecaseService {
                 atpRefTagUseCase.setCaseId(caseId);
                 atpRefTagUseCase.setProjectId(projectId);
                 atpRefTagUseCase.setId(IdUtil.simpleUUID());
-                atpRefTagUseCase.setFolderId(folderId);
+//                atpRefTagUseCase.setFolderId(folderId);
                 atpRefTagUseCaseBusiness.creatRefTagUsecase(atpRefTagUseCase);
 
             }

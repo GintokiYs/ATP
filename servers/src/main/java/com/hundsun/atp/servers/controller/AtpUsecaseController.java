@@ -83,7 +83,7 @@ public class AtpUsecaseController {
         String caseId = abstractUsecaseDto.getCaseId();
         String folderId = abstractUsecaseDto.getFolderId();
         // todo 后面把folderId的关联关系去掉
-        return atpUsecaseService.editUsecaseTags(atpTagInfoDtoList,caseId,folderId);
+        return atpUsecaseService.editUsecaseTags(atpTagInfoDtoList,caseId);
 
     }
 

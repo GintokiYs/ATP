@@ -54,4 +54,8 @@ public class AtpTagInfo implements Serializable {
     @ApiModelProperty("空间id")
     @TableField("project_id")
     private String projectId;
+
+    @ApiModelProperty("用例集id")
+    @TableField("folder_id")
+    private String folderId;
 }

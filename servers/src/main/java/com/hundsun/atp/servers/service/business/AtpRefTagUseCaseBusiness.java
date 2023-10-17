@@ -35,21 +35,20 @@ public class AtpRefTagUseCaseBusiness extends ServiceImpl<AtpRefTagUseCaseMapper
     private AtpRefTagUseCaseMapper atpRefTagUseCaseMapper;
 
     public Boolean creatRefTagUsecase(AtpRefTagUseCase atpRefTagUseCase) {
-        // 根据tag_id、case_id、project_id、folder_id 来校验这个表里是否存在同一个tag了,如果存在就不做操作，如果不存在就插入
-        if (!validateTagExist(atpRefTagUseCase.getTagId(),atpRefTagUseCase.getCaseId(),atpRefTagUseCase.getProjectId(),atpRefTagUseCase.getFolderId())){
+        // 根据tag_id、case_id、project_id来校验这个表里是否存在同一个tag了,如果存在就不做操作，如果不存在就插入
+        if (!validateTagExist(atpRefTagUseCase.getTagId(),atpRefTagUseCase.getCaseId(),atpRefTagUseCase.getProjectId())){
             int insertCount = atpRefTagUseCaseMapper.insert(atpRefTagUseCase);
             return insertCount > 0;
         }
         return false;
     }
 
-    public boolean validateTagExist(String tagId, String caseId, String projectId, String folderId) {
+    public boolean validateTagExist(String tagId, String caseId, String projectId) {
         QueryWrapper<AtpRefTagUseCase> queryWrapper = new QueryWrapper<>();
         HashMap<String, Object> queryMap = MapUtil.newHashMap();
         queryMap.put("tag_id", tagId);
         queryMap.put("case_id", caseId);
         queryMap.put("project_id", projectId);
-        queryMap.put("folder_id", folderId);
         QueryWrapper<AtpRefTagUseCase> refTagUseCaseQueryWrapper = queryWrapper.allEq(queryMap);
         Long tagInfoCount = atpRefTagUseCaseMapper.selectCount(refTagUseCaseQueryWrapper);
         return tagInfoCount > 0;
