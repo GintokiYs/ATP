@@ -86,6 +86,14 @@ public class AtpUsecaseController {
 //        return atpUsecaseService.editUsecaseTags(atpTagInfoDtoList,caseId,folderId);
 //
 //    }
+    @PostMapping("/edittags")
+    @ApiOperation("用例实例上新增标签")
+    public RpcResultDTO<Boolean> editUsecaseTags(@Validated @RequestBody AbstractUsecaseDto abstractUsecaseDto){
+        List<AtpTagInfoDto> atpTagInfoDtoList = abstractUsecaseDto.getTags();
+        String caseId = abstractUsecaseDto.getCaseId();
+        String folderId = abstractUsecaseDto.getFolderId();
+        // todo 后面把folderId的关联关系去掉
+        return atpUsecaseService.editUsecaseTags(atpTagInfoDtoList,caseId);
 
 //    // 用例查询用例集的标签集合
 //    @PostMapping("/queryfoldertags")

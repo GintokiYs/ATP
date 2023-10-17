@@ -214,10 +214,11 @@ public class AtpTagInfoBusiness extends ServiceImpl<AtpTagInfoMapper, AtpTagInfo
     }
 
 
+    @Transactional
     public boolean deleteTagAndRef(String tagId) {
         //先删tag_info里的数据
-        int deleteTagInfoByTagIdCount = atpTagInfoMapper.deleteByTagId(tagId);
-        if (deleteTagInfoByTagIdCount > 0) {
+        int deleteTagInfoByIdCount = atpTagInfoMapper.deleteThroughId(tagId);
+        if (deleteTagInfoByIdCount > 0) {
             //再删关联表数据
             int deleteRefByTagIdCount = atpRefTagUseCaseMapper.deleteByTagId(tagId);
             return deleteRefByTagIdCount >= 0;
@@ -239,5 +240,10 @@ public class AtpTagInfoBusiness extends ServiceImpl<AtpTagInfoMapper, AtpTagInfo
                 .collect(Collectors.toList());
 
         return tagInfoVoList;
+    }
+
+    public List<AtpTagInfo> queryByFolderId(String folderId) {
+        List<AtpTagInfo> atpTagInfos = atpTagInfoMapper.selectByFolderId(folderId);
+        return atpTagInfos;
     }
 }

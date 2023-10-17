@@ -19,6 +19,9 @@
     <delete id="deleteByTagId">
         delete from atp_tag_info where tag_id = #{tagId}
     </delete>
+    <delete id="deleteThroughId">
+        delete from atp_tag_info where id = #{id}
+    </delete>
     <select id="selectAllTagInfo" resultType="com.hundsun.atp.persister.model.AtpTagInfo">
         select * from atp_tag_info
     </select>
@@ -38,6 +41,14 @@
     <select id="selectByTagId" resultType="java.lang.String">
         select id from atp_tag_info
         where tag_id = #{tagId}
+    </select>
+    <select id="selectByFolderId" resultType="com.hundsun.atp.persister.model.AtpTagInfo">
+        select * from atp_tag_info
+        where folder_id = #{folderId}
+    </select>
+    <select id="selectByTagKey" resultType="com.hundsun.atp.persister.model.AtpTagInfo">
+        select * from atp_tag_info
+        where tag_key = #{tagKey}
     </select>
 
 </mapper>

@@ -54,8 +54,8 @@ public class AtpTagInfoServiceImpl implements AtpTagInfoService {
     @Override
     public RpcResultDTO<Boolean> deleteTagInfo(AtpTagInfoDto tagInfoDto) {
         //先删除tag_info表里的数据，再删关联表数据
-        String tagId = tagInfoDto.getTagId();
-        return RpcResultUtils.suc(atpTagInfoBusiness.deleteTagAndRef(tagId));
+        String id = tagInfoDto.getId();
+        return RpcResultUtils.suc(atpTagInfoBusiness.deleteTagAndRef(id));
     }
 
     @Override
@@ -68,12 +68,7 @@ public class AtpTagInfoServiceImpl implements AtpTagInfoService {
     public RpcResultDTO<List<AtpTagInfoVo>> queryFolderTags(AtpCommonFolderDto atpCommonFolderDto) {
         try {
             String folderId = atpCommonFolderDto.getId();
-            List<AtpRefTagUseCase> atpRefTagUseCases = atpRefTagUseCaseBusiness.queryByFolderId(folderId);
-            ArrayList<String> tagIds = new ArrayList<>();
-            for (AtpRefTagUseCase atpRefTagUseCase : atpRefTagUseCases) {
-                tagIds.add(atpRefTagUseCase.getTagId());
-            }
-            List<AtpTagInfo> atpTagInfos = atpTagInfoBusiness.queryByTagIds(tagIds);
+            List<AtpTagInfo> atpTagInfos = atpTagInfoBusiness.queryByFolderId(folderId);
             //转成VO
             ArrayList<AtpTagInfoVo> atpTagInfoVos = new ArrayList<>();
             for (AtpTagInfo atpTagInfo : atpTagInfos) {

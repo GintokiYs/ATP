@@ -42,4 +42,7 @@ public class AtpTagInfoDto implements Serializable {
 
     @ApiModelProperty("空间id")
     private String projectId;
+
+    @ApiModelProperty("用例集id")
+    private String folderId;
 }

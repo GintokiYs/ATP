@@ -28,4 +28,10 @@ public interface AtpTagInfoMapper extends BaseMapper<AtpTagInfo> {
     int deleteByTagId(String tagId);
 
     String selectByTagId(String tagId);
+
+    List<AtpTagInfo> selectByFolderId(String folderId);
+
+    AtpTagInfo selectByTagKey(String tagKey);
+
+    int deleteThroughId(String id);
 }
