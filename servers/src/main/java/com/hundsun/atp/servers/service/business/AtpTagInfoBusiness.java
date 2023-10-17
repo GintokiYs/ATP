@@ -251,4 +251,9 @@ public class AtpTagInfoBusiness extends ServiceImpl<AtpTagInfoMapper, AtpTagInfo
         List<AtpTagInfo> atpTagInfos = atpTagInfoMapper.selectByFolderId(folderId);
         return atpTagInfos;
     }
+
+    public List<AtpTagInfo> queryByIds(List<String> tagIds) {
+        List<AtpTagInfo> atpTagInfos = atpTagInfoMapper.selectTagsByIds(tagIds);
+        return atpTagInfos;
+    }
 }

@@ -119,7 +119,7 @@ public class AtpUsecaseServiceImpl implements AtpUsecaseService {
                 .collect(Collectors.groupingBy(AtpUseCaseInstance::getUseCaseId));
 
         for (AtpUseCaseWithInstance atpUseCase : list) {
-            String id = atpUseCase.getId();
+            String id = atpUseCase.getCaseId();
             List<AtpUseCaseInstance> atpUseCaseWithInstances1 = withInstanceMap.get(id);
             AtpUseCaseStatistics atpUseCaseStatistics = useCaseConvert.enhanceStatistics(atpUseCase);
             if (CollUtil.isNotEmpty(atpUseCaseWithInstances1)) {
@@ -256,7 +256,8 @@ public class AtpUsecaseServiceImpl implements AtpUsecaseService {
                 tagIds.add(atpRefTagUseCase.getTagId());
             }
             //再从atp_tag_info表里去根据tag_id查表
-            List<AtpTagInfo> atpTagInfos = atpTagInfoBusiness.queryByTagIds(tagIds);
+            List<AtpTagInfo> atpTagInfos = atpTagInfoBusiness.queryByIds(tagIds);
+//            List<AtpTagInfo> atpTagInfos = atpTagInfoBusiness.queryByTagIds(tagIds);
             //转成VO
             ArrayList<AtpTagInfoVo> atpTagInfoVos = new ArrayList<>();
             for (AtpTagInfo atpTagInfo : atpTagInfos) {

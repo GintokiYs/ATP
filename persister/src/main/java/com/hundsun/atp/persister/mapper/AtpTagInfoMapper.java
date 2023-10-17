@@ -34,4 +34,6 @@ public interface AtpTagInfoMapper extends BaseMapper<AtpTagInfo> {
     AtpTagInfo selectByTagKey(String tagKey);
 
     int deleteThroughId(String id);
+
+    List<AtpTagInfo> selectTagsByIds(@Param("tagIds") List<String> tagIds);
 }

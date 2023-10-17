@@ -84,8 +84,8 @@ public class AtpUsecaseController {
 //
 //    }
 
-    @PostMapping("/edittags")
-//    @ApiOperation("用例实例上新增标签")
+    @PostMapping("/editTags")
+    @ApiOperation("用例实例上新增标签")
     public RpcResultDTO<Boolean> editUsecaseTags(@Validated @RequestBody AbstractUsecaseDto abstractUsecaseDto) {
         List<AtpTagInfoDto> atpTagInfoDtoList = abstractUsecaseDto.getTags();
         String caseId = abstractUsecaseDto.getCaseId();

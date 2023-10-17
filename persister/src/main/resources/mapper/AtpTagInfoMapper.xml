@@ -50,5 +50,17 @@
         select * from atp_tag_info
         where tag_key = #{tagKey}
     </select>
+    <select id="selectTagsByIds" resultType="com.hundsun.atp.persister.model.AtpTagInfo">
+        select * from atp_tag_info
+        <if test="tagIds != null and tagIds.size() > 0">
+            where id in
+            <foreach collection="tagIds" item="tagId" open="(" separator="," close=")">
+                #{tagId}
+            </foreach>
+        </if>
+        <if test="tagIds == null or tagIds.size() == 0">
+            where 1=0 <!-- 返回空结果集 -->
+        </if>
+    </select>
 
 </mapper>
