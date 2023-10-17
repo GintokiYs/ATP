@@ -117,7 +117,7 @@
         a.folder_id,
         a.check_rule,
         a.case_type,
-        a.execute_config,
+--         a.execute_config,
         a.enabled,
         a.create_user,
         a.create_time,
@@ -148,6 +148,6 @@
                 #{checkResult}
             </foreach>
         </if>
-        order by a.case_id , b.bussiness_time desc
+        order by a.update_time desc
     </select>
 </mapper>

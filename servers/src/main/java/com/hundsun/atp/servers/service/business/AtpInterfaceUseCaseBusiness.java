@@ -16,6 +16,8 @@ import com.hundsun.atp.common.prompt.LLMEnum;
 import com.hundsun.atp.persister.model.AtpUseCase;
 import com.hundsun.atp.servers.prompt.LLMApiUtils;
 
+import com.hundsun.atp.servers.service.business.caserun.CaseRunParams;
+import com.hundsun.atp.servers.service.business.caserun.CaseRunResult;
 import com.hundsun.atp.servers.service.business.caserun.impl.http.HttpPostCaseParams;
 import com.hundsun.atp.servers.service.business.caserun.impl.http.HttpPostCaseResult;
 import com.hundsun.atp.servers.service.business.caserun.impl.http.HttpPostCaseRunHandle;
@@ -33,7 +35,7 @@ import java.util.List;
  * @since 2023-09-27
  */
 @Service
-public class AtpInterfaceUseCaseBusiness extends AbstractUseCaseBusiness<HttpPostCaseParams, HttpPostCaseResult> {
+public class AtpInterfaceUseCaseBusiness<IN extends CaseRunParams, OUT extends CaseRunResult> extends AbstractUseCaseBusiness<HttpPostCaseParams, HttpPostCaseResult> {
 
     private static final String API_KEY = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJoc18zNjE0MSIsImlhdCI6MTY5NDA4NDk5MiwiZXhwIjoxNzAyNzI0OTkyfQ.E6AFtY2WD17BOK5kBK6UMPH2hxVSfbWBIx6K7eRcQoE";
     private static final String API_URL = "http://10.20.33.13:8090/uis/chat/completions";

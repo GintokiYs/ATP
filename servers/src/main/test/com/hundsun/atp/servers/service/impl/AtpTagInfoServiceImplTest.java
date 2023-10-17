@@ -1,13 +1,15 @@
 package com.hundsun.atp.servers.service.impl;
 
-import com.hundsun.atp.api.AtpTagInfoService;
+
 import com.hundsun.atp.api.AtpUsecaseService;
+import com.hundsun.atp.api.taginfo.AtpTagInfoService;
 import com.hundsun.atp.common.domain.dto.folder.AtpCommonFolderDto;
 import com.hundsun.atp.common.domain.dto.tag.AtpTagInfoDto;
 import com.hundsun.atp.common.domain.dto.usecase.InterfaceUsecaseDto;
 import com.hundsun.atp.common.domain.entity.RpcResultDTO;
 import com.hundsun.atp.common.domain.vo.taginfo.AtpTagInfoVo;
 import com.hundsun.atp.persister.mapper.AtpTagInfoMapper;
+import com.hundsun.atp.persister.model.AtpTagInfo;
 import com.hundsun.atp.servers.AtpApplication;
 import com.hundsun.atp.servers.service.business.AtpTagInfoBusiness;
 import org.junit.Test;
@@ -38,7 +40,7 @@ public class AtpTagInfoServiceImplTest {
     private AtpTagInfoBusiness atpTagInfoBusiness;
 
     @Test
-    public void testCreateTagInfo(){
+    public void testCreateTagInfo() {
         AtpTagInfoDto atpTagInfoDto = new AtpTagInfoDto();
         atpTagInfoDto.setTagId("testTagId");
         atpTagInfoDto.setTagKey("标签Test");
@@ -59,7 +61,7 @@ public class AtpTagInfoServiceImplTest {
 
 
     @Test
-    public void testTagProcess(){
+    public void testTagProcess() {
         // 创建好用例集之后，应该还没有标签
         // 现在要开始新建一个用例
         // 此时新增用例界面会列出已有的标签：传参FodlerDto
@@ -109,7 +111,7 @@ public class AtpTagInfoServiceImplTest {
 
         AtpTagInfo atpTagInfo = atpTagInfoMapper.selectByTagKey(atpTagInfoDto1.getTagKey());
         AtpTagInfoDto atpTagInfoDto = new AtpTagInfoDto();
-        BeanUtils.copyProperties(atpTagInfo,atpTagInfoDto);
+        BeanUtils.copyProperties(atpTagInfo, atpTagInfoDto);
         // 这里再测标签删除：传参FodlerDto，这里要求dto中的属性id一定要有，是根据这个来删
         atpTagInfoService.deleteTagInfo(atpTagInfoDto);
         // 删完后再查一遍
@@ -130,26 +132,26 @@ public class AtpTagInfoServiceImplTest {
         interfaceUsecaseDto.setFolderId(atpCommonFolderDto.getId());
         ArrayList<AtpTagInfoDto> atpTagInfoDtos = new ArrayList<>();
         for (AtpTagInfoDto tagInfoDto : atpTagInfoDtosAfterQuery) {
-            if ("标签Test-create2".equals(tagInfoDto.getTagKey()) || "标签Test-create3".equals(tagInfoDto.getTagKey())){
+            if ("标签Test-create2".equals(tagInfoDto.getTagKey()) || "标签Test-create3".equals(tagInfoDto.getTagKey())) {
                 atpTagInfoDtos.add(tagInfoDto);
             }
         }
         interfaceUsecaseDto.setTags(atpTagInfoDtos);
-        atpUsecaseService.editUsecaseTags(interfaceUsecaseDto.getTags(),interfaceUsecaseDto.getCaseId());
+        atpUsecaseService.editUsecaseTags(interfaceUsecaseDto);
 
         // 再去选择一次标签，这次不选择2、3，选择3、4
         ArrayList<AtpTagInfoDto> atpTagInfoDtos1 = new ArrayList<>();
         for (AtpTagInfoDto tagInfoDto : atpTagInfoDtosAfterQuery) {
-            if ("标签Test-create3".equals(tagInfoDto.getTagKey()) || "标签Test-create4".equals(tagInfoDto.getTagKey())){
+            if ("标签Test-create3".equals(tagInfoDto.getTagKey()) || "标签Test-create4".equals(tagInfoDto.getTagKey())) {
                 atpTagInfoDtos1.add(tagInfoDto);
             }
         }
         interfaceUsecaseDto.setTags(atpTagInfoDtos1);
-        atpUsecaseService.editUsecaseTags(interfaceUsecaseDto.getTags(),interfaceUsecaseDto.getCaseId());
+        atpUsecaseService.editUsecaseTags(interfaceUsecaseDto);
 
         AtpTagInfo atpTagInfoSec = atpTagInfoMapper.selectByTagKey(atpTagInfoDto3.getTagKey());
         AtpTagInfoDto atpTagInfoDtoSec = new AtpTagInfoDto();
-        BeanUtils.copyProperties(atpTagInfoSec,atpTagInfoDtoSec);
+        BeanUtils.copyProperties(atpTagInfoSec, atpTagInfoDtoSec);
         atpTagInfoService.deleteTagInfo(atpTagInfoDtoSec);
     }
 
