@@ -68,6 +68,7 @@ public abstract class AbstractUseCaseBusiness<IN extends CaseRunParams, OUT exte
      */
     public void testCase(final AtpUseCase atpUseCase, final AtpCommonFolder atpCommonFolder){
         AtpUseCaseInstance atpUseCaseInstance = new AtpUseCaseInstance();
+        atpUseCaseInstance.setId(IdUtil.simpleUUID());
         atpUseCaseInstance.setUseCaseId(atpUseCase.getCaseId());
         atpUseCaseInstance.setInstanceId(IdUtil.simpleUUID());
         atpUseCaseInstance.setStartTime(new Date());
@@ -81,7 +82,7 @@ public abstract class AbstractUseCaseBusiness<IN extends CaseRunParams, OUT exte
             // todo 需要记录executeResult
             atpUseCaseInstance.setExecuteStatus(ExecuteStatusEnum.SUCCESS.getCode());
         } catch (Exception e){
-            log.error("执行用例失败, 用例名称为：{}, 用例id为：{}。", atpUseCase.getName(), atpUseCase.getCaseId());
+            log.error("执行用例失败, 用例名称为：{}, 用例id为：{}。", atpUseCase.getName(), atpUseCase.getCaseId(), e);
             newAtpUseCaseInstance.setExecuteStatus(ExecuteStatusEnum.FAIL.getCode());
         } finally {
             newAtpUseCaseInstance.setStopTime(new Date());

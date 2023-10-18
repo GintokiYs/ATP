@@ -68,7 +68,7 @@ public class AtpUseCaseInstanceServiceImpl implements AtpUseCaseInstanceService 
                     try {
                         atpInterfaceUseCaseBusiness.testCase(atpUseCase, atpCommonFolder);
                     } catch (Exception e){
-                        logger.error("HttpPost用例执行异常, 用例名称：{}, 用例id：{}。", atpUseCase.getName(), atpUseCase.getCaseId());
+                        logger.error("HttpPost用例执行异常, 用例名称：{}, 用例id：{}。", atpUseCase.getName(), atpUseCase.getCaseId(), e);
                     }
                 }
             }
