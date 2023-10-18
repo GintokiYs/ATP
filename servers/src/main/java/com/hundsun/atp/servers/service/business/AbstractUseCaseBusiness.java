@@ -62,14 +62,14 @@ public abstract class AbstractUseCaseBusiness<IN extends CaseRunParams, OUT exte
     /**
      * 执行测试用例并获取执行结果
      *
-     * @param atpUseCase 测试用例信息
+     * @param atpUseCase      测试用例信息
      * @param atpCommonFolder 测试用例集信息
      * @return OUT
      */
-    public void testCase(final AtpUseCase atpUseCase, final AtpCommonFolder atpCommonFolder){
+    public void testCase(final AtpUseCase atpUseCase, final AtpCommonFolder atpCommonFolder) {
         AtpUseCaseInstance atpUseCaseInstance = new AtpUseCaseInstance();
         atpUseCaseInstance.setId(IdUtil.simpleUUID());
-        atpUseCaseInstance.setUseCaseId(atpUseCase.getCaseId());
+        atpUseCaseInstance.setUseCaseId(atpUseCase.getId());
         atpUseCaseInstance.setInstanceId(IdUtil.simpleUUID());
         atpUseCaseInstance.setStartTime(new Date());
         atpUseCaseInstance.setExecuteStatus(ExecuteStatusEnum.RUNNING.getCode());
@@ -81,7 +81,7 @@ public abstract class AbstractUseCaseBusiness<IN extends CaseRunParams, OUT exte
             OUT executeResult = caseRunHandle.excuteCase(caseRunParams);
             // todo 需要记录executeResult
             atpUseCaseInstance.setExecuteStatus(ExecuteStatusEnum.SUCCESS.getCode());
-        } catch (Exception e){
+        } catch (Exception e) {
             log.error("执行用例失败, 用例名称为：{}, 用例id为：{}。", atpUseCase.getName(), atpUseCase.getCaseId(), e);
             newAtpUseCaseInstance.setExecuteStatus(ExecuteStatusEnum.FAIL.getCode());
         } finally {
