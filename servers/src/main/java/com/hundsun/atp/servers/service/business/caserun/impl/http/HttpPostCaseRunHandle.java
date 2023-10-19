@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 @Component
@@ -41,6 +42,9 @@ public class HttpPostCaseRunHandle extends AbstractCaseRunHandle<HttpPostCasePar
     public HttpPostCaseParams caseTransform(AtpUseCase atpUseCase, AtpCommonFolder atpCommonFolder) throws JsonProcessingException {
         HttpPostCaseParams httpPostCaseParams = new HttpPostCaseParams();
         httpPostCaseParams.settCaseJson(atpUseCase.getInterfaceContent());
+        HashMap<String, String> requestProperties = new HashMap<>();
+        requestProperties.put("Content-Type","application/json");
+        httpPostCaseParams.setRequestProperties(requestProperties);
         Map<String, String> executeConfig;
         try {
             TypeReference<Map<String, String>> typeReference = new TypeReference<Map<String, String>>() {};

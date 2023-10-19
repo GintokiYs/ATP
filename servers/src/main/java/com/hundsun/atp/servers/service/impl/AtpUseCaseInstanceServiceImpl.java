@@ -15,6 +15,7 @@ import com.hundsun.atp.servers.service.business.*;
 import com.hundsun.atp.servers.service.business.caserun.CaseRunResult;
 import com.hundsun.atp.servers.service.business.caserun.impl.http.HttpPostCaseParams;
 import com.hundsun.atp.servers.service.business.factory.UseCaseBusinessFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,9 +37,8 @@ import java.util.concurrent.Executors;
  * @since 2023-09-27
  */
 @Service
+@Slf4j
 public class AtpUseCaseInstanceServiceImpl implements AtpUseCaseInstanceService {
-
-    private static Logger logger = LoggerFactory.getLogger(AtpUseCaseInstanceServiceImpl.class);
 
     @Autowired
     private AtpCommonFolderBusiness atpCommonFolderBusiness;
@@ -56,25 +56,30 @@ public class AtpUseCaseInstanceServiceImpl implements AtpUseCaseInstanceService 
 
     @Override
     public RpcResultDTO<String> caseRun(CaseTestRequest caseTestRequest) {
-        List<String> caseIdList = caseTestRequest.getCaseIdList();
-        String foldId = caseTestRequest.getFolderId();
-        AtpCommonFolder atpCommonFolder = atpCommonFolderBusiness.getById(foldId);
-        AbstractUseCaseBusiness atpInterfaceUseCaseBusiness = useCaseBusinessFactory.buildBusiness(UseCaseTypeEnum.INTERFACE);
-        final List<AtpUseCase> caseList = atpInterfaceUseCaseBusiness.queryUserCaseByCaseIdList(caseIdList);
-        executorService.submit(new Runnable() {
-            @Override
-            public void run() {
-                for (AtpUseCase atpUseCase : caseList) {
-                    try {
-                        atpInterfaceUseCaseBusiness.testCase(atpUseCase, atpCommonFolder);
-                    } catch (Exception e){
-                        logger.error("HttpPost用例执行异常, 用例名称：{}, 用例id：{}。", atpUseCase.getName(), atpUseCase.getCaseId(), e);
+        try {
+            List<String> caseIdList = caseTestRequest.getCaseIdList();
+            String foldId = caseTestRequest.getFoldId();
+            AtpCommonFolder atpCommonFolder = atpCommonFolderBusiness.getById(foldId);
+            AbstractUseCaseBusiness atpInterfaceUseCaseBusiness = useCaseBusinessFactory.buildBusiness(UseCaseTypeEnum.INTERFACE);
+//        final List<AtpUseCase> caseList = atpInterfaceUseCaseBusiness.queryUserCaseByCaseIdList(caseIdList);
+            final List<AtpUseCase> caseList = atpInterfaceUseCaseBusiness.listByIds(caseIdList);
+            executorService.submit(new Runnable() {
+                @Override
+                public void run() {
+                    for (AtpUseCase atpUseCase : caseList) {
+                        try {
+                            atpInterfaceUseCaseBusiness.testCase(atpUseCase, atpCommonFolder);
+                        } catch (Exception e) {
+                            log.error("HttpPost用例执行异常, 用例名称：{}, 用例id：{}。", atpUseCase.getName(), atpUseCase.getCaseId(), e);
+                        }
                     }
                 }
-            }
-        });
-
-        return RpcResultUtils.suc("用例执行完成");
+            });
+            return RpcResultUtils.suc("用例执行完成");
+        } catch (Exception e) {
+            log.error("error message is:", e);
+            return RpcResultUtils.error("000000", "用例执行异常");
+        }
     }
 
 

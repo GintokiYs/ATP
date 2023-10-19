@@ -78,7 +78,7 @@ public class AtpUseCaseInstanceServiceImplTest {
         list.add("6666666666");
         list.add("7777777777");
         caseTestRequest.setCaseIdList(list);
-        caseTestRequest.setFolderId("0");
+        caseTestRequest.setFoldId("0");
 
         RpcResultDTO<String> rpcResult = atpUseCaseInstanceService.caseRun(caseTestRequest);
 

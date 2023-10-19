@@ -8,7 +8,7 @@ import java.util.List;
 public class CaseTestRequest extends AtpBaseDto {
 
     private List<String> caseIdList;
-    private String folderId;
+    private String foldId;
 
     public List<String> getCaseIdList() {
         return caseIdList;
@@ -18,11 +18,11 @@ public class CaseTestRequest extends AtpBaseDto {
         this.caseIdList = caseIdList;
     }
 
-    public String getFolderId() {
-        return folderId;
+    public String getFoldId() {
+        return foldId;
     }
 
-    public void setFolderId(String folderId) {
-        this.folderId = folderId;
+    public void setFoldId(String foldId) {
+        this.foldId = foldId;
     }
 }

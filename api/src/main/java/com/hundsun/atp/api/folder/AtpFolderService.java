@@ -24,7 +24,9 @@ import java.util.List;
  **/
 public interface AtpFolderService {
 
-    RpcResultDTO<AtpCommonFolderVo> create(AtpCommonFolderDto folderDto);
+    default RpcResultDTO<AtpCommonFolderVo> create(AtpCommonFolderDto folderDto) {
+        return null;
+    }
 
     RpcResultDTO<List<AtpCommonFolderVo>> selectFlatFolders(String projectId);
 

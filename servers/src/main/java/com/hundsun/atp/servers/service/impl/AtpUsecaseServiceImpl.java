@@ -119,7 +119,7 @@ public class AtpUsecaseServiceImpl implements AtpUsecaseService {
                 .collect(Collectors.groupingBy(AtpUseCaseInstance::getUseCaseId));
 
         for (AtpUseCaseWithInstance atpUseCase : list) {
-            String id = atpUseCase.getCaseId();
+            String id = atpUseCase.getId();
             List<AtpUseCaseInstance> atpUseCaseWithInstances1 = withInstanceMap.get(id);
             AtpUseCaseStatistics atpUseCaseStatistics = useCaseConvert.enhanceStatistics(atpUseCase);
             if (CollUtil.isNotEmpty(atpUseCaseWithInstances1)) {
