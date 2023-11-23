@@ -1,6 +1,7 @@
 package com.hundsun.atp.servers.controller;
 
 import com.hundsun.atp.api.folder.AtpFolderService;
+import com.hundsun.atp.common.annotation.DynamicSwitchDataSource;
 import com.hundsun.atp.common.domain.dto.folder.AtpCommonFolderDto;
 import com.hundsun.atp.common.domain.dto.folder.AtpTreeQueryDto;
 import com.hundsun.atp.common.domain.dto.usecase.InterfaceUsecaseDto;
@@ -13,6 +14,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static com.hundsun.atp.common.constant.GlobalConstants.DATA_SOURCE_DATASOURCE01;
 
 /**
  * 文件描述
@@ -58,6 +61,7 @@ public class AtpCommonFolderController {
      */
     @PostMapping("/selectFlatFolders")
     @ApiOperation("目录树展示")
+    @DynamicSwitchDataSource(DATA_SOURCE_DATASOURCE01)
     RpcResultDTO<List<AtpCommonFolderVo>> selectFlatFolders(@Validated @RequestBody AtpTreeQueryDto atpTreeQueryDto) {
         return atpFolderService.selectFlatFolders(atpTreeQueryDto.getProjectId());
     }

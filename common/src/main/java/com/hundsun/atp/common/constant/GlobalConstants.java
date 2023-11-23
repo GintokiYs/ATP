@@ -58,4 +58,10 @@ public class GlobalConstants {
     public static final Integer FIVE = Integer.valueOf(5);
 
     public static final String BACKTICK = "`";
+
+    public static final String DATA_SOURCE_DATASOURCE01 = "datasource01";
+
+    public static final String DATA_SOURCE_DATASOURCE02 = "datasource02";
+
+    public static final String DATA_SOURCE_DATASOURCE03 = "datasource03";
 }

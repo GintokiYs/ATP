@@ -13,6 +13,19 @@
 
     <dependencies>
         <dependency>
+            <groupId>io.fabric8</groupId>
+            <artifactId>kubernetes-client</artifactId>
+            <version>5.5.0</version> <!-- 使用适合你项目的版本 -->
+        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>io.fabric8</groupId>-->
+<!--            <artifactId>fabric8-kubernetes-api</artifactId>-->
+<!--            <version>4.20.1</version> &lt;!&ndash; 使用适合你项目的版本 &ndash;&gt;-->
+<!--        </dependency>-->
+
+
+
+        <dependency>
             <groupId>org.hundsun.atp</groupId>
             <artifactId>api</artifactId>
             <version>${project.version}</version>
