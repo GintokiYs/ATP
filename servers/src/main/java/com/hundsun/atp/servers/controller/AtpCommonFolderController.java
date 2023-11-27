@@ -1,5 +1,6 @@
 package com.hundsun.atp.servers.controller;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.hundsun.atp.api.folder.AtpFolderService;
 import com.hundsun.atp.common.annotation.DynamicSwitchDataSource;
 import com.hundsun.atp.common.domain.dto.folder.AtpCommonFolderDto;
@@ -62,6 +63,7 @@ public class AtpCommonFolderController {
     @PostMapping("/selectFlatFolders")
     @ApiOperation("目录树展示")
     @DynamicSwitchDataSource(DATA_SOURCE_DATASOURCE01)
+    @DS("master")
     RpcResultDTO<List<AtpCommonFolderVo>> selectFlatFolders(@Validated @RequestBody AtpTreeQueryDto atpTreeQueryDto) {
         return atpFolderService.selectFlatFolders(atpTreeQueryDto.getProjectId());
     }

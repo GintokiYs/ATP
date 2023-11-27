@@ -4,6 +4,7 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import springfox.documentation.oas.annotations.EnableOpenApi;
 
@@ -16,6 +17,7 @@ import springfox.documentation.oas.annotations.EnableOpenApi;
 @MapperScan("com.hundsun.atp.persister.mapper")
 @EnableOpenApi
 @EnableTransactionManagement(order = 10)
+@EnableScheduling
 public class AtpApplication {
 
     public static void main(String[] args) {

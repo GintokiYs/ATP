@@ -5,6 +5,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.IdUtil;
 import com.alibaba.fastjson.JSON;
+import com.baomidou.dynamic.datasource.DynamicRoutingDataSource;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -24,6 +25,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.beans.BeanMap;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
+import javax.sql.DataSource;
 import java.lang.reflect.Field;
 import java.util.*;
 
@@ -37,6 +40,9 @@ import java.util.*;
  */
 @Service
 public class AtpCommonFolderBusiness extends ServiceImpl<AtpCommonFolderMapper, AtpCommonFolder> {
+
+    @Resource
+    private DataSource dataSource;
 
     @Autowired
     private AtpCommonFolderMapper atpCommonFolderMapper;
