@@ -15,7 +15,9 @@ spring:
   application:
     name: atp
   datasource:
-    url: jdbc:mysql://10.20.145.91:33061/auto_test_platform?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+#    url: jdbc:mysql://10.20.145.91:33061/auto_test_platform?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+#    测试使用Nginx代理
+    url: jdbc:mysql://10.20.145.94:33063/atp?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
